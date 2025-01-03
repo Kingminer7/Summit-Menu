@@ -7,9 +7,12 @@ namespace summit::ui::styles {
 
     void ImTabbed::update(float) {
         for (auto tab : getTabs()) {
-            if (ImGui::Begin(tab.c_str())) {
-                for (auto widget : getWidgets(tab)) {
-                    widget.second->renderImgui();
+            ImGui::SetNextWindowSize(ImVec2(300, 400));
+            if (ImGui::Begin(tab.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
+                for (auto widget : getWidgetOrder(tab)) {
+                    if (auto comp = getWidget(widget)) {
+                        comp->renderImgui();
+                    }
                 }
                 ImGui::End();
             }

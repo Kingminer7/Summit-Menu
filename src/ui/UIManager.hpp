@@ -25,6 +25,8 @@ namespace summit::ui {
     void removeWidget(std::string id);
     std::map<std::string, Widget*> getWidgets();
     std::map<std::string, Widget*> getWidgets(std::string tab);
+    std::vector<std::string> getWidgetOrder();
+    std::vector<std::string> getWidgetOrder(std::string tab);
 
     #define RegisterStyle(T) $on_mod(Loaded) { summit::ui::addStyle(new T); }
     #define RegisterTab(T) $on_mod(Loaded) { summit::ui::registerTab(T); }

@@ -6,7 +6,9 @@ namespace summit::ui {
 
     std::map<std::string, Style*> styleM = {};
     Style *currentStyle = nullptr;
+
     std::map<std::string, Widget*> widgets = {};
+    std::vector<std::string> widgetOrder = {};
 
     Style *getStyle() {
         return currentStyle;
@@ -31,7 +33,6 @@ namespace summit::ui {
     void addStyle(Style *style) {
         style->init();
         styleM[style->getId()] = style;
-        log::info("Added style: {}", style->getId());
     }
 
     void init() {
@@ -44,6 +45,7 @@ namespace summit::ui {
 
     void registerWidget(std::string id, Widget *widget) {
         widgets[id] = widget;
+        widgetOrder.push_back(id);
     }
 
     Widget *getWidget(std::string id) {
@@ -68,6 +70,24 @@ namespace summit::ui {
         return tabWidgets;
     }
 
+    std::vector<std::string> getWidgetOrder() {
+        //reverse it
+        std::vector<std::string> reversed = widgetOrder;
+        std::reverse(reversed.begin(), reversed.end());
+        return reversed;
+    }
+
+    std::vector<std::string> getWidgetOrder(std::string tab) {
+        std::vector<std::string> tabOrder = {};
+        for (auto id : widgetOrder) {
+            if (widgets[id]->getTab() == tab) {
+                tabOrder.push_back(id);
+            }
+        }
+        std::reverse(tabOrder.begin(), tabOrder.end());
+        return tabOrder;
+    }
+
     void registerTab(std::string tab) {
         if (std::find(tabs.begin(), tabs.end(), tab) == tabs.end()) {
             tabs.push_back(tab);
@@ -84,14 +104,8 @@ namespace summit::ui {
         return tabs;
     }
 
-    RegisterTab("Test Tab")
-    RegisterTab("Test Tab 2")
-    RegisterWidget(Widget::create("test")->setTab("Test Tab")->addComponent(Label::create("test", "Hello, World!")));
-    RegisterWidget(Widget::create("speedheck")->setTab("Test Tab")->addComponent(Toggle::create("speedheck", false, [](Component *comp, bool value) {
-        log::info("Speedheck: {}", value);
-    }))->addComponent(Label::create("test", "Totally speedhack!"))->addComponent(FloatInput::create("speed", 0.0f, [](Component *comp, float value) {
-        log::info("Speed: {}", value);
-    })->setMin(0.0f)->setMax(10.0f)->setType(InputType::Slider)));
+    RegisterTab("Global")
+    RegisterTab("Player")
 }
 
 using namespace summit::ui;
