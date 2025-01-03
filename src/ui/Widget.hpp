@@ -18,6 +18,7 @@ namespace summit::ui {
             std::vector<std::string> order;
             std::unordered_map<std::string, Component*> components;
             std::string id;
+            std::string tab;
 
             Widget() {};
 
@@ -29,9 +30,10 @@ namespace summit::ui {
             Component *getComponent(std::string id);
             std::unordered_map<std::string, Component*> getComponents();
             std::vector<std::string> getOrder();
-            void addComponent(Component *component);
-            void removeComponent(std::string id);
-
+            Widget *addComponent(Component *component);
+            Widget *removeComponent(std::string id);
+            Widget *setTab(std::string tab);
+            std::string getTab();
             void renderImgui();
             CCNode *createCocosNode();
     };

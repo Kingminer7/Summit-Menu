@@ -6,9 +6,14 @@ namespace summit::ui::styles {
     }
 
     void ImTabbed::update(float) {
-        ImGui::Begin("Test");
-        ImGui::Text("Hello, world!");
-        ImGui::End();
+        for (auto tab : getTabs()) {
+            if (ImGui::Begin(tab.c_str())) {
+                for (auto widget : getWidgets(tab)) {
+                    widget.second->renderImgui();
+                }
+                ImGui::End();
+            }
+        }
     }
 
     void ImTabbed::show() {

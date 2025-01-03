@@ -25,21 +25,36 @@ namespace summit::ui {
         return this->components;
     }
 
-    void Widget::addComponent(Component *component) {
+    Widget *Widget::addComponent(Component *component) {
         if (this->components.find(component->getId()) != this->components.end()) {
             log::error("Component with id {} already exists in widget {}.", component->getId(), this->id);
-            return;
+            return this;
         }
         this->components.insert({component->getId(), component});
         this->order.push_back(component->getId());
+        return this;
     }
 
-    void Widget::removeComponent(std::string id) {
+    Widget *Widget::removeComponent(std::string id) {
         if (this->components.find(id) == this->components.end()) {
             log::error("Component with id {} does not exist in widget {}.", id, this->id);
-            return;
+            return this;
         }
         this->components.erase(id);
+        return this;
+    }
+
+    std::vector<std::string> Widget::getOrder() {
+        return this->order;
+    }
+
+    Widget *Widget::setTab(std::string tab) {
+        this->tab = tab;
+        return this;
+    }
+
+    std::string Widget::getTab() {
+        return this->tab;
     }
 
     void Widget::renderImgui() {
@@ -53,7 +68,6 @@ namespace summit::ui {
     }
 
     CCNode *Widget::createCocosNode() {
-        // Create widget node
         return nullptr;
     }
 
