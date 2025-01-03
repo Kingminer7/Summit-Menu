@@ -106,6 +106,7 @@ namespace summit::ui {
 
     RegisterTab("Global")
     RegisterTab("Player")
+    RegisterTab("Bypass")
 }
 
 using namespace summit::ui;
