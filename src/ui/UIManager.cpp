@@ -1,39 +1,54 @@
 #include "UIManager.hpp"
 
 namespace summit::ui {
-    UIManager *UIManager::instance = nullptr;
-    void UIManager::init() {
-        widget = Widget::create("root");
-        widget->addComponent(Button::create("button2", [](Component *comp) {
-            log::info("Button clicked!");
-        }));
-        widget->addComponent(Toggle::create("toggle", false, [](Component *comp, bool value) {
-            log::info("Toggle toggled!");
-        }));
-        widget->addComponent(Label::create("label", "Hello, world!"));
-        widget->addComponent(Button::create("button", [](Component *comp) {
-            log::info("Button clicked!");
-        }));
+    
+    std::map<std::string, Style*> styleM = {};
+    Style *currentStyle = nullptr;
+
+    Style *getStyle() {
+        return currentStyle;
     }
-    UIManager *UIManager::get()  {
-        if (!instance) {
-            instance = new UIManager();
-            instance->init();
-        }
-        return instance;
+
+    Style *getStyle(std::string style) {
+        return styleM[style];
+    }
+
+    std::string getCurrentStyle() {
+        return currentStyle->getId();
+    }
+
+    void setStyle(std::string style) {
+        currentStyle = styleM[style];
+    }
+
+    void setStyle(Style *style) {
+        currentStyle = style;
+    }
+
+    void addStyle(Style *style) {
+        style->init();
+        styleM[style->getId()] = style;
+        log::info("Added style: {}", style->getId());
+    }
+
+    void init() {
+        #ifdef GEODE_IS_MOBILE
+        setStyle("CocosUI");
+        #else
+        setStyle("ImTabbed");
+        #endif
     }
 }
 
+using namespace summit::ui;
+
 $on_mod(Loaded) {
     ImGuiCocos::get().setup([] {
-        // this runs after imgui has been setup,
-        // its a callback as imgui will be re initialized when toggling fullscreen,
-        // so use this to setup any themes and or fonts!
+        init();
     }).draw([] {
-        ImGui::Begin("My awesome window");
-        ImGui::GetIO().FontGlobalScale = 2.f;
-        summit::ui::UIManager::get()->widget->renderImgui();
-        
-        ImGui::End();
+        auto style = getStyle();
+        if (style && style->getBaseStyle() == styles::BaseType::ImGui) {
+            style->update(ImGui::GetIO().DeltaTime);
+        }
     });
 }

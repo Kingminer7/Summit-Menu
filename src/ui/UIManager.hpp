@@ -1,18 +1,19 @@
 #pragma once
 
+#include "styles/Style.hpp"
 #include <imgui-cocos.hpp>
-#include "Widget.hpp"
 
 using namespace geode::prelude;
+using namespace summit::ui::styles;
 
 namespace summit::ui {
-    class UIManager {
-        protected:
-            UIManager() {}
-            static UIManager *instance;
-            void init();
-        public:
-            Widget *widget;
-            static UIManager *get();
-    };
+    Style *getStyle();
+    Style *getStyle(std::string style);
+    std::string getCurrentStyle();
+    void setStyle(std::string style);
+    void setStyle(Style *style);
+    void init();
+    void addStyle(Style *style);
+
+    #define RegisterStyle(T) $on_mod(Loaded) { summit::ui::addStyle(new T); }
 }

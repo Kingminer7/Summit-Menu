@@ -2,6 +2,15 @@ name: Build Geode Mod
 
 on:
   workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build Type'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - release
+          - debug
   push:
     branches:
       - "**"
@@ -31,6 +40,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set Release Build
+        run: echo "RELEASE_BUILD=${{ github.event.inputs.build_type == 'release' }}" >> $GITHUB_ENV
 
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
