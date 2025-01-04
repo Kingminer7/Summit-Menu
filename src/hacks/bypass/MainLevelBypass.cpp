@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-namespace summit::hacks::global {
+namespace summit::hacks::bypass {
     void MainLevelBypass::init() {
         toggled = summit::Config::get<bool>("bypass.mainlevels.toggled", false);
         auto widget = ui::Widget::create("bypass.mainlevels")

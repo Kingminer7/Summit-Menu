@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-namespace summit::hacks::global {
+namespace summit::hacks::bypass {
     void TextBypass::init() {
         charLimitBypass = summit::Config::get<bool>("bypass.charlimit.toggled", false);
         charFilterBypass = summit::Config::get<bool>("bypass.charfilter.toggled", false);

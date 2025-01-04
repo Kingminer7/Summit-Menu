@@ -19,8 +19,7 @@ namespace summit::hacks::global {
             ->addComponent(
                 ui::FloatInput::create("test-float", value,
                     [this](ui::Component *comp, float value) {
-                        this->value = round(value * 1000) / 1000.0f;
-                        summit::Config::set("global.testhack.value", .832f);
+                        summit::Config::set("global.testhack.value", value);
                 })
                 ->setMin(0.001f)
                 ->setMax(10.000F)

@@ -1,4 +1,5 @@
 #include "Widget.hpp"
+#include "FontManager.hpp"
 #include <imgui.h>
 
 namespace summit::ui {
@@ -71,6 +72,15 @@ namespace summit::ui {
         return nullptr;
     }
 
+    Widget *Widget::setExclusivity(Exclusivity exclusivity) {
+        this->exclusivity = exclusivity;
+        return this;
+    }
+
+    Exclusivity Widget::getExclusivity() {
+        return this->exclusivity;
+    }
+
     // Component
 
     std::string Component::getId() {
@@ -99,8 +109,23 @@ namespace summit::ui {
         return this->text;
     }
 
+    Label *Label::setFont(std::pair<std::string, std::string>font) {
+        this->font = font;
+        return this;
+    }
+
+    std::pair<std::string, std::string>Label::getFont() {
+        return this->font;
+    }
+
     void Label::renderImgui() {
+        if (!font.first.empty()) {
+            summit::ui::pushFont(font.first, font.second);
+        }
         ImGui::Text("%s", this->text.c_str());
+        if (!font.first.empty()) {
+            summit::ui::popFont();
+        }
     }
 
     CCNode *Label::createCocosNode() {
@@ -122,8 +147,14 @@ namespace summit::ui {
     }
 
     void Button::renderImgui() {
+        if (!font.first.empty()) {
+            summit::ui::pushFont(font.first, font.second);
+        }
         if (ImGui::Button(this->id.c_str())) {
             this->callback(this);
+        }
+        if (!font.first.empty()) {
+            summit::ui::popFont();
         }
     }
 
@@ -138,6 +169,15 @@ namespace summit::ui {
 
     std::function<void(Component *comp)> Button::getCallback() {
         return this->callback;
+    }
+
+    Button *Button::setFont(std::pair<std::string, std::string>font) {
+        this->font = font;
+        return this;
+    }
+
+    std::pair<std::string, std::string>Button::getFont() {
+        return this->font;
     }
 
     // Toggle
@@ -188,6 +228,10 @@ namespace summit::ui {
     }
 
     void IntInput::renderImgui() {
+        if (!font.first.empty()) {
+            summit::ui::pushFont(font.first, font.second);
+        }
+        ImGui::SetNextItemWidth(60);
         if (type == InputType::Slider) {
             if (ImGui::SliderInt(fmt::format("##{}", this->id).c_str(), &this->value, min, max)) {
                 this->callback(this, this->value);
@@ -200,6 +244,9 @@ namespace summit::ui {
             if (ImGui::DragInt(fmt::format("##{}", this->id).c_str(), &this->value, 1, min, max)) {
                 this->callback(this, this->value);
             }
+        }
+        if (!font.first.empty()) {
+            summit::ui::popFont();
         }
     }
 
@@ -243,6 +290,15 @@ namespace summit::ui {
         return this->max;
     }
 
+    IntInput *IntInput::setFont(std::pair<std::string, std::string>font) {
+        this->font = font;
+        return this;
+    }
+
+    std::pair<std::string, std::string>IntInput::getFont() {
+        return this->font;
+    }
+
     // Float Input
 
     void FloatInput::init(std::string id, float value, std::function<void(Component *comp, float value)> callback) {
@@ -258,6 +314,10 @@ namespace summit::ui {
     }
 
     void FloatInput::renderImgui() {
+        ImGui::SetNextItemWidth(120);
+        if (!font.first.empty()) {
+            summit::ui::pushFont(font.first, font.second);
+        }
         if (type == InputType::Slider) {
             if (ImGui::SliderFloat(fmt::format("##{}", this->id).c_str(), &this->value, min, max)) {
                 this->callback(this, this->value);
@@ -270,6 +330,9 @@ namespace summit::ui {
             if (ImGui::DragFloat(fmt::format("##{}", this->id).c_str(), &this->value, 1.f, min, max)) {
                 this->callback(this, this->value);
             }
+        }
+        if (!font.first.empty()) {
+            summit::ui::popFont();
         }
     }
 
@@ -313,6 +376,15 @@ namespace summit::ui {
         return this->max;
     }
 
+    FloatInput *FloatInput::setFont(std::pair<std::string, std::string>font) {
+        this->font = font;
+        return this;
+    }
+
+    std::pair<std::string, std::string>FloatInput::getFont() {
+        return this->font;
+    }
+
     // Line Break
 
     void LineBreak::init(std::string id) {
@@ -331,6 +403,102 @@ namespace summit::ui {
     }
 
     CCNode *LineBreak::createCocosNode() {
+        return nullptr;
+    }
+
+    // Dropdown
+
+    void Dropdown::init(std::string id, std::vector<std::string> options, std::string selected, std::function<void(Component *comp, std::string value)> callback) {
+        this->id = id;
+        this->options = options;
+        this->callback = callback;
+        this->selected = std::distance(options.begin(), std::find(options.begin(), options.end(), selected));
+    }
+
+    Dropdown *Dropdown::create(std::string id, std::vector<std::string> options, std::string selected, std::function<void(Component *comp, std::string value)> callback) {
+        Dropdown *dropdown = new Dropdown;
+        dropdown->init(id, options, selected, callback);
+        return dropdown;
+    }
+
+    Dropdown *Dropdown::setOptions(std::vector<std::string> options) {
+        this->options = options;
+        return this;
+    }
+
+    std::vector<std::string> Dropdown::getOptions() {
+        return this->options;
+    }
+
+    std::string Dropdown::getSelected() {
+        return this->options[this->selected];
+    }
+
+    int Dropdown::getSelectedIndex() {
+        return this->selected;
+    }
+
+    Dropdown *Dropdown::setSelected(std::string selected) {
+        this->selected = std::distance(this->options.begin(), std::find(this->options.begin(), this->options.end(), selected));
+        return this;
+    }
+
+    Dropdown *Dropdown::setSelected(int selected) {
+        this->selected = selected;
+        return this;
+    }
+
+    Dropdown *Dropdown::setCallback(std::function<void(Component *comp, std::string value)> callback) {
+        this->callback = callback;
+        return this;
+    }
+
+    std::function<void(Component *comp, std::string value)> Dropdown::getCallback() {
+        return this->callback;
+    }
+
+    Dropdown *Dropdown::setFont(std::string font, std::pair<std::string, std::string>imfont) {
+        this->fonts[font] = imfont;
+        return this;
+    }
+
+    std::pair<std::string, std::string>Dropdown::getFont(std::string font) {
+        return this->fonts[font];
+    }
+
+    std::map<std::string, std::pair<std::string, std::string>>Dropdown::getFonts() {
+        return this->fonts;
+    }
+
+    Dropdown *Dropdown::setFonts(std::map<std::string, std::pair<std::string, std::string>>fonts) {
+        this->fonts = fonts;
+        return this;
+    }
+
+    void Dropdown::renderImgui() {
+        ImGui::SetNextItemWidth(150);
+        if (ImGui::BeginCombo(fmt::format("##{}", this->id).c_str(), this->options[this->selected].c_str())) {
+            for (int i = 0; i < this->options.size(); i++) {
+                bool isSelected = i == this->selected;
+                if (this->fonts.find(this->options[i]) != this->fonts.end()) {
+                    summit::ui::pushFont(this->fonts[this->options[i]].first, this->fonts[this->options[i]].second);
+                }
+                if (ImGui::Selectable(this->options[i].c_str(), isSelected)) {
+                    this->selected = i;
+                    this->callback(this, this->options[i]);
+                }
+                if (this->fonts.find(this->options[i]) != this->fonts.end()) {
+                    summit::ui::popFont();
+                }
+                if (isSelected) {
+                    ImGui::SetItemDefaultFocus();
+                }
+            }
+            ImGui::EndCombo();
+        }
+    }
+
+    CCNode *Dropdown::createCocosNode() {
         return nullptr;
     }
 }

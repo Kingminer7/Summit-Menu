@@ -1,11 +1,9 @@
 #include "../Hack.hpp"
 
-namespace summit::hacks::bypass {
-    class IconHack : public summit::hacks::Hack {
-        protected:
-            bool toggled = false;
+namespace summit::hacks::shortcuts {
+    class Shortcuts : public summit::hacks::Hack {
         public:
-            IconHack() {};
+            Shortcuts() {};
             
             void init() override;
             std::string getId() override;

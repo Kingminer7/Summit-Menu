@@ -1,4 +1,5 @@
 #include "UIManager.hpp"
+#include "FontManager.hpp"
 
 namespace summit::ui {
     
@@ -36,6 +37,7 @@ namespace summit::ui {
     }
 
     void init() {
+        initFonts();
         #ifdef GEODE_IS_MOBILE
         setStyle("CocosUI");
         #else
@@ -107,6 +109,8 @@ namespace summit::ui {
     RegisterTab("Global")
     RegisterTab("Player")
     RegisterTab("Bypass")
+    RegisterTab("Config")
+    RegisterTab("Shortcuts")
 }
 
 using namespace summit::ui;

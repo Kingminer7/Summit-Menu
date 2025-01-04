@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-namespace summit::hacks::global {
+namespace summit::hacks::bypass {
     void IconHack::init() {
         toggled = summit::Config::get<bool>("bypass.iconhack.toggled", false);
         auto widget = ui::Widget::create("bypass.iconhack")

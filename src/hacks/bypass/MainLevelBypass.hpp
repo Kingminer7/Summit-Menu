@@ -1,6 +1,6 @@
 #include "../Hack.hpp"
 
-namespace summit::hacks::global {
+namespace summit::hacks::bypass {
     class MainLevelBypass : public summit::hacks::Hack {
         protected:
             bool toggled = false;

@@ -1,8 +1,19 @@
 #pragma once
 
+#include <imgui.h>
 using namespace geode::prelude;
 
 namespace summit::ui {
+    enum class Exclusivity {
+        // Categories
+        All,
+        ImGui,
+        Cocos,
+        // Specifics
+        ImTabbed,
+        CocosUI
+    };
+
     class Component {
         protected:
             std::string id;
@@ -19,6 +30,7 @@ namespace summit::ui {
             std::unordered_map<std::string, Component*> components;
             std::string id;
             std::string tab;
+            Exclusivity exclusivity = Exclusivity::All;
 
             Widget() {};
 
@@ -28,12 +40,20 @@ namespace summit::ui {
 
             std::string getId();
             Component *getComponent(std::string id);
+            template <typename T>
+            T *getComponentWithType(std::string id) {
+                if (this->components[id])
+                    return dynamic_cast<T*>(this->components[id]);
+                return nullptr;
+            }
             std::unordered_map<std::string, Component*> getComponents();
             std::vector<std::string> getOrder();
             Widget *addComponent(Component *component);
             Widget *removeComponent(std::string id);
             Widget *setTab(std::string tab);
             std::string getTab();
+            Widget *setExclusivity(Exclusivity exclusivity);
+            Exclusivity getExclusivity();
             void renderImgui();
             CCNode *createCocosNode();
     };
@@ -42,10 +62,13 @@ namespace summit::ui {
         protected:
             std::string text;
             void init(std::string id, std::string text);
+            std::pair<std::string, std::string>font;
         public:
             static Label *create(std::string id, std::string text);
             Label *setText(std::string text);
             std::string getText();
+            Label *setFont(std::pair<std::string, std::string>font);
+            std::pair<std::string, std::string>getFont();
             void renderImgui() override;
             CCNode *createCocosNode() override;
     };
@@ -54,10 +77,13 @@ namespace summit::ui {
         protected:
             std::function<void(Component *comp)> callback;
             void init(std::string id, std::function<void(Component *comp)> callback);
+            std::pair<std::string, std::string>font;
         public:
             static Button *create(std::string id, std::function<void(Component *comp)> callback);
             Button *setCallback(std::function<void(Component *comp)> callback);
             std::function<void(Component *comp)> getCallback();
+            Button *setFont(std::pair<std::string, std::string>font);
+            std::pair<std::string, std::string>getFont();
             void renderImgui() override;
             CCNode *createCocosNode() override;
     };
@@ -99,6 +125,7 @@ namespace summit::ui {
             int max = 0;
             InputType type = InputType::Slider;
             std::function<void(Component *comp, int value)> callback;
+            std::pair<std::string, std::string>font;
             void init(std::string id, int value, std::function<void(Component *comp, int value)> callback);
         public:
             static IntInput *create(std::string id, int value, std::function<void(Component *comp, int value)> callback);
@@ -112,6 +139,8 @@ namespace summit::ui {
             int getMin();
             IntInput *setMax(int max);
             int getMax();
+            IntInput *setFont(std::pair<std::string, std::string>font);
+            std::pair<std::string, std::string>getFont();
             void renderImgui() override;
             CCNode *createCocosNode() override;
     };
@@ -123,6 +152,7 @@ namespace summit::ui {
             float max = 5;
             InputType type = InputType::Slider;
             std::function<void(Component *comp, float value)> callback;
+            std::pair<std::string, std::string>font;
             void init(std::string id, float value, std::function<void(Component *comp, float value)> callback);
         public:
             static FloatInput *create(std::string id, float value, std::function<void(Component *comp, float value)> callback);
@@ -136,6 +166,35 @@ namespace summit::ui {
             float getMin();
             FloatInput *setMax(float max);
             float getMax();
+            FloatInput *setFont(std::pair<std::string, std::string>font);
+            std::pair<std::string, std::string>getFont();
+            void renderImgui() override;
+            CCNode *createCocosNode() override;
+    };
+
+    // Dropdown
+
+    class Dropdown : public Component {
+        protected:
+            std::vector<std::string> options;
+            int selected;
+            std::function<void(Component *comp, std::string value)> callback;
+            std::map<std::string, std::pair<std::string, std::string>> fonts;
+            void init(std::string id, std::vector<std::string> options, std::string selected, std::function<void(Component *comp, std::string value)> callback);
+        public:
+            static Dropdown *create(std::string id, std::vector<std::string> options, std::string selected, std::function<void(Component *comp, std::string value)> callback);
+            Dropdown *setOptions(std::vector<std::string> options);
+            std::vector<std::string> getOptions();
+            Dropdown *setSelected(int selected);
+            Dropdown *setSelected(std::string selected);
+            std::string getSelected();
+            int getSelectedIndex();
+            Dropdown *setCallback(std::function<void(Component *comp, std::string value)> callback);
+            std::function<void(Component *comp, std::string value)> getCallback();
+            Dropdown *setFont(std::string option, std::pair<std::string, std::string>font);
+            std::pair<std::string, std::string>getFont(std::string option);
+            Dropdown *setFonts(std::map<std::string, std::pair<std::string, std::string>>fonts);
+            std::map<std::string, std::pair<std::string, std::string>>getFonts();
             void renderImgui() override;
             CCNode *createCocosNode() override;
     };
