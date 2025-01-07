@@ -4,7 +4,7 @@
 
 using namespace geode::prelude;
 
-namespace summit::ui::cocos {
+namespace summit::ui {
 
     class MenuBall : public CCMenu {
     protected:
