@@ -5,7 +5,7 @@ namespace summit::ui::styles {
 
     bool CocosPopup::setup() {
         retain();
-        m_currentTab = summit::Config::get<std::string>("ui.current-tab")
+        m_currentTab = summit::Config::get<std::string>("ui.current-tab", "Global");
         m_bgSprite->setID("bg"_spr);
         m_mainLayer->setID("main-layer"_spr);
         m_buttonMenu->setID("button-menu"_spr);
@@ -107,8 +107,11 @@ namespace summit::ui::styles {
     }
 
     void CocosPopup::destroy() {
-        onClose(nullptr);
-        release();
+        auto menu = CocosPopup::get();
+        if (menu) {
+            menu->onClose(nullptr);
+            menu->release();
+        }
     }
 
     void CocosPopup::show() {
@@ -137,7 +140,6 @@ namespace summit::ui::styles {
         }
         m_currentTab = id;
     }
-}
 
     void CocosUI::init() {
         
