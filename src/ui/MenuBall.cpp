@@ -1,11 +1,11 @@
 #include "MenuBall.hpp"
-#include "../../Summit.hpp"
-#include "../UIManager.hpp"
+#include "../Summit.hpp"
+#include "../ui/UIManager.hpp"
 
-using namespace summit::ui::cocos;
+using namespace summit::ui;
 using namespace geode::prelude;
 
-namespace summit::ui::cocos {
+namespace summit::ui {
 
 MenuBall *MenuBall::instance = nullptr;
 
@@ -30,13 +30,13 @@ bool MenuBall::init() {
   SceneManager::get()->keepAcrossScenes(this);
 
   setZOrder(9999998);
-  auto x = summit::Config::getValue<float>("ballPosX", 50.f);
-  auto y = summit::Config::getValue<float>("ballPosY", 50.f);
+  auto x = summit::Config::get<float>("ballPosX", 50.f);
+  auto y = summit::Config::get<float>("ballPosY", 50.f);
   x = std::clamp(x, -getContentWidth() / 2, CCDirector::get()->getWinSize().width - getContentWidth() / 2);
   y = std::clamp(y, -getContentHeight() / 2, CCDirector::get()->getWinSize().height - getContentHeight() / 2);
   setPosition({x, y});
-  summit::Config::setValue<float>("ballPosX", x);
-  summit::Config::setValue<float>("ballPosY", y);
+  summit::Config::set<float>("ballPosX", x);
+  summit::Config::set<float>("ballPosY", y);
 
   setID("summit-button"_spr);
 
@@ -95,14 +95,14 @@ void MenuBall::ccTouchMoved(CCTouch *touch, CCEvent *evt) {
     pos.x = std::clamp(pos.x, -getContentWidth() / 2, CCDirector::get()->getWinSize().width - getContentWidth() / 2);
     pos.y = std::clamp(pos.y, -getContentHeight() / 2, CCDirector::get()->getWinSize().height - getContentHeight() / 2);
     setPosition(pos);
-    summit::Config::setValue<float>("ballPosX", pos.x);
-    summit::Config::setValue<float>("ballPosY", pos.y);
+    summit::Config::set<float>("ballPosX", pos.x);
+    summit::Config::set<float>("ballPosY", pos.y);
   }
 }
 
 void MenuBall::onPress() { 
   // CocosMenu::open();
-  if (auto uis = summit::ui::getCurrentStyle()) uis->toggle();
+  if (auto uis = summit::ui::getStyle()) uis->toggle();
 }
 
 void MenuBall::update(float dt) {
@@ -115,7 +115,7 @@ void MenuBall::update(float dt) {
   #endif
 }
 
-} // namespace summit::cocosui
+} 
 
 #include <Geode/modify/MenuLayer.hpp>
 class $modify(MenuLayer){
