@@ -38,11 +38,11 @@ namespace summit::ui {
 
     void init() {
         initFonts();
-        //#ifdef GEODE_IS_MOBILE
-        //setStyle("CocosUI");
-        //#else
+        #ifdef GEODE_IS_MOBILE
+        setStyle("CocosUI");
+        #else
         setStyle("ImTabbed");
-        //#endif
+        #endif
     }
 
     void registerWidget(std::string id, Widget *widget) {
