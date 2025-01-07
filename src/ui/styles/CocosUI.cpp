@@ -1,4 +1,5 @@
 #include "CocosUI.hpp"
+#include "../../Summit.hpp"
 
 namespace summit::ui::styles {
 
@@ -106,7 +107,7 @@ namespace summit::ui::styles {
     }
 
     void CocosPopup::destroy() {
-        onClose();
+        onClose(nullptr);
         release();
     }
 
@@ -121,20 +122,20 @@ namespace summit::ui::styles {
         auto btn = dynamic_cast<CCMenuItemSpriteExtra *>(sender);
         if (!btn) return;
         auto id = btn->getID();
-        if (id == m_currentMenu) return;
+        if (id == m_currentTab) return;
         for (auto &menu : m_menus) {
-            if (menu->getID() == m_currentMenu)
+            if (menu->getID() == m_currentTab)
                 menu->setVisible(false);
             if (menu->getID() == id)
                 menu->setVisible(true);
         }
         for (auto &btn : m_menuBtns) {
-            if (btn->getID() == m_currentMenu)
+            if (btn->getID() == m_currentTab)
                 btn->getChildByType<CCScale9Sprite>(0)->setColor({0, 0, 0});
             if (btn->getID() == id)
                 btn->getChildByType<CCScale9Sprite>(0)->setColor({50, 50, 50});
         }
-        m_currentMenu = id;
+        m_currentTab = id;
     }
 }
 
