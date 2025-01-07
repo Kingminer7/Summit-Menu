@@ -159,6 +159,7 @@ namespace summit::ui::styles {
     }
 
     void CocosUI::toggle() {
-        Style::toggle();
+        if (visible) hide();
+        else show();
     }
 }
