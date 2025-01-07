@@ -12,7 +12,7 @@ namespace summit::ui::styles {
         
         std::vector<ScrollLayer *> m_menus;
         std::vector<CCMenuItemSpriteExtra *> m_menuBtns;
-        std::string m_currentMenu;
+        std::string m_currentTab;
     public:
         void show() override;
         static void open();
