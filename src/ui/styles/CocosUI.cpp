@@ -2,7 +2,7 @@
 
 namespace summit::ui::styles {
 
-    bool CocosMenu::setup() {
+    bool CocosPopup::setup() {
         retain();
         m_currentTab = summit::Config::get<std::string>("ui.current-tab")
         m_bgSprite->setID("bg"_spr);
@@ -79,8 +79,8 @@ namespace summit::ui::styles {
         return true;
     }
 
-    CocosMenu *CocosMenu::create() {
-        auto ret = new CocosMenu();
+    CocosPopup *CocosPopup::create() {
+        auto ret = new CocosPopup();
         if (ret->initAnchored(420.f, 300.f)) {
             ret->autorelease();
             return ret;
@@ -90,34 +90,34 @@ namespace summit::ui::styles {
         return nullptr;
     }
 
-    CocosMenu *CocosMenu::get() {
-        if (CCScene::get()->getChildByType<CocosMenu>(0)) {
-            return CCScene::get()->getChildByType<CocosMenu>(0);
+    CocosPopup *CocosPopup::get() {
+        if (CCScene::get()->getChildByType<CocosPopup>(0)) {
+            return CCScene::get()->getChildByType<CocosPopup>(0);
         }
         return nullptr;
     }
 
-    void CocosMenu::open() {
-        auto menu = CocosMenu::get();
+    void CocosPopup::open() {
+        auto menu = CocosPopup::get();
         if (!menu) {
-            menu = CocosMenu::create();
+            menu = CocosPopup::create();
             menu->show();
         }
     }
 
-    void destroy() {
+    void CocosPopup::destroy() {
         onClose();
         release();
     }
 
-    void CocosMenu::show() {
+    void CocosPopup::show() {
         auto s = m_mainLayer->getScale();
         m_mainLayer->setScale(0.0f);
         CCScene::get()->addChild(this, 9999999);
         m_mainLayer->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, s), 1.2f));
     }
 
-    void CocosMenu::onTab(CCObject *sender) {
+    void CocosPopup::onTab(CCObject *sender) {
         auto btn = dynamic_cast<CCMenuItemSpriteExtra *>(sender);
         if (!btn) return;
         auto id = btn->getID();
@@ -148,6 +148,7 @@ namespace summit::ui::styles {
 
     void CocosUI::show() {
         Style::show();
+        CocosPopup::open();
     }
 
     void CocosUI::hide() {
