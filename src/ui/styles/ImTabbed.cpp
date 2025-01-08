@@ -7,6 +7,7 @@ namespace summit::ui::styles {
     }
 
     void ImTabbed::update(float) {
+        if (!visible) return;
         auto scale = summit::Config::get<float>("config.uiscale", 1.f) * ImGui::GetIO().DisplaySize.x / 1920.f;
         for (auto tab : getTabs()) {
             ImGui::SetNextWindowSize(ImVec2(200 * scale, 275 * scale));

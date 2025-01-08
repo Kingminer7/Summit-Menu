@@ -1,4 +1,5 @@
 #include "Summit.hpp"
+#include "KeyManager.hpp"
 #include "hacks/Hack.hpp"
 
 using namespace geode::prelude;
@@ -61,4 +62,5 @@ $on_mod(Loaded) {
     summit::Config::init();
     summit::UpdateManager::get();
     summit::hacks::init();
+    summit::utils::KeyManager::loadBinds();
 }

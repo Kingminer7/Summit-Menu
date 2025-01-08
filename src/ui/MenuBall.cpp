@@ -1,6 +1,7 @@
 #include "MenuBall.hpp"
 #include "../Summit.hpp"
 #include "../ui/UIManager.hpp"
+#include "../KeyManager.hpp"
 
 using namespace summit::ui;
 using namespace geode::prelude;
@@ -32,15 +33,22 @@ bool MenuBall::init() {
   setZOrder(9999998);
   auto x = summit::Config::get<float>("ballPosX", 50.f);
   auto y = summit::Config::get<float>("ballPosY", 50.f);
-  x = std::clamp(x, -getContentWidth() / 2, CCDirector::get()->getWinSize().width - getContentWidth() / 2);
-  y = std::clamp(y, -getContentHeight() / 2, CCDirector::get()->getWinSize().height - getContentHeight() / 2);
+  x = std::clamp(x, -getContentWidth() / 2,
+                 CCDirector::get()->getWinSize().width - getContentWidth() / 2);
+  y = std::clamp(y, -getContentHeight() / 2,
+                 CCDirector::get()->getWinSize().height -
+                     getContentHeight() / 2);
   setPosition({x, y});
   summit::Config::set<float>("ballPosX", x);
   summit::Config::set<float>("ballPosY", y);
 
   setID("summit-button"_spr);
 
-  return true;;
+  utils::KeyManager::addKeybind(new utils::Keybind{
+      "open", "Open Summit Menu", utils::Key::Tab,
+      [this] { onPress(); }});
+
+  return true;
 }
 
 MenuBall *MenuBall::get() {
@@ -62,7 +70,7 @@ void MenuBall::registerWithTouchDispatcher() {
 
 bool MenuBall::ccTouchBegan(CCTouch *touch, CCEvent *evt) {
   // if (CocosMenu::get()) return false;
-  if (!isVisible())
+  if (!isVisible() || !isHandlingTouch())
     return false;
   diff = getPosition() - touch->getLocation();
   startPos = new CCPoint(touch->getLocation());
@@ -72,9 +80,10 @@ bool MenuBall::ccTouchBegan(CCTouch *touch, CCEvent *evt) {
     return false;
   }
   move = false;
-  
+
   stopAllActions();
-  runAction(CCEaseSineOut::create(CCScaleTo::create(0.3f, m_scale * m_multiplier)));
+  runAction(
+      CCEaseSineOut::create(CCScaleTo::create(0.3f, m_scale * m_multiplier)));
   return true;
 }
 
@@ -92,35 +101,49 @@ void MenuBall::ccTouchMoved(CCTouch *touch, CCEvent *evt) {
       move = true;
   if (move) {
     auto pos = touch->getLocation() + diff;
-    pos.x = std::clamp(pos.x, -getContentWidth() / 2, CCDirector::get()->getWinSize().width - getContentWidth() / 2);
-    pos.y = std::clamp(pos.y, -getContentHeight() / 2, CCDirector::get()->getWinSize().height - getContentHeight() / 2);
+    pos.x = std::clamp(pos.x, -getContentWidth() / 2,
+                       CCDirector::get()->getWinSize().width -
+                           getContentWidth() / 2);
+    pos.y = std::clamp(pos.y, -getContentHeight() / 2,
+                       CCDirector::get()->getWinSize().height -
+                           getContentHeight() / 2);
     setPosition(pos);
     summit::Config::set<float>("ballPosX", pos.x);
     summit::Config::set<float>("ballPosY", pos.y);
   }
 }
 
-void MenuBall::onPress() { 
+void MenuBall::onPress() {
   // CocosMenu::open();
-  if (auto uis = summit::ui::getStyle()) uis->toggle();
+  if (auto uis = summit::ui::getStyle())
+    uis->toggle();
 }
 
 void MenuBall::update(float dt) {
-  #ifndef GEODE_IS_ANDROID
-  if (summit::Config::get<bool>("config.showball", false)) {
-    setVisible(true);
-  } else {
-    setVisible(false);
-  }
-  #endif
+  setVisible(isRendered());
 }
 
-} 
+bool MenuBall::isRendered() {
+  if (!summit::Config::get<bool>("config.showball", false)) return false;
+  return shouldRender;
+}
+
+void MenuBall::setRendered(bool render) { shouldRender = render; }
+
+bool MenuBall::isHandlingTouch() {
+  if (!summit::Config::get<bool>("config.showball", false)) return false;
+  return shouldHandleTouch;
+}
+
+void MenuBall::setHandlingTouch(bool handle) { shouldHandleTouch = handle; }
+
+} // namespace summit::ui
 
 #include <Geode/modify/MenuLayer.hpp>
-class $modify(MenuLayer){
-  bool init(){
-    if (!MenuLayer::init()) return false;
+class $modify(MenuLayer) {
+  bool init() {
+    if (!MenuLayer::init())
+      return false;
     static bool initialized = false;
     if (!initialized) {
       MenuBall::get();
@@ -141,7 +164,8 @@ class $modify(CCScene) {
       btn->setZOrder(-1);
     }
     auto highest = CCScene::getHighestChildZ();
-    if (btn) btn->setZOrder(btnZ);
+    if (btn)
+      btn->setZOrder(btnZ);
     return highest;
   }
 };

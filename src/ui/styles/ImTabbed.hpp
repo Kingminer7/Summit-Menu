@@ -12,9 +12,9 @@ namespace summit::ui::styles {
             std::string getId() override { return "ImTabbed"; }
             BaseType getBaseStyle() override { return BaseType::ImGui; }
             void update(float) override;
-            void show();
-            void hide();
-            void toggle();
+            void show() override;
+            void hide() override;
+            void toggle() override;
             bool isVisible();
     };
 

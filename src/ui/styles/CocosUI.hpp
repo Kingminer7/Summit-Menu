@@ -19,6 +19,7 @@ namespace summit::ui::styles {
         static void destroy();
         static CocosPopup *get();
         void onTab(CCObject *sender);
+        void onClose(CCObject *) override;
     };
 
     class CocosUI : public Style {
@@ -30,9 +31,9 @@ namespace summit::ui::styles {
             std::string getId() override { return "CocosUI"; }
             BaseType getBaseStyle() override { return BaseType::Cocos; }
             void update(float) override;
-            void show();
-            void hide();
-            void toggle();
+            void show() override;
+            void hide() override;
+            void toggle() override;
             bool isVisible();
     };
 

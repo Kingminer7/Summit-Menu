@@ -15,9 +15,9 @@ namespace summit::ui::styles {
             virtual BaseType getBaseStyle() = 0;
             // Functions as the draw function for imgui styles
             virtual void update(float) = 0;
-            void show();
-            void hide();
-            void toggle();
+            virtual void show();
+            virtual void hide();
+            virtual void toggle();
             bool isVisible();
     };
 }

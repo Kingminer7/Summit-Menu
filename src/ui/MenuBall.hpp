@@ -13,6 +13,8 @@ namespace summit::ui {
         float m_scale = 1.0f;
         float m_multiplier = 0.8f;
         bool move = false;
+        bool shouldRender = true;
+        bool shouldHandleTouch = true;
 
         CCPoint *startPos;
         CCPoint diff;
@@ -32,6 +34,12 @@ namespace summit::ui {
         static MenuBall *get();
         void onPress();
         void update(float dt) override;
+        
+        bool isRendered();
+        void setRendered(bool render);
+
+        bool isHandlingTouch();
+        void setHandlingTouch(bool handle);
     };
 
 }

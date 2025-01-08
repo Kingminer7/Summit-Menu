@@ -1,5 +1,7 @@
 #include "CocosUI.hpp"
+#include "../MenuBall.hpp"
 #include "../../Summit.hpp"
+#include "../UIManager.hpp"
 
 namespace summit::ui::styles {
 
@@ -91,6 +93,12 @@ namespace summit::ui::styles {
         return nullptr;
     }
 
+    void CocosPopup::onClose(CCObject *) {
+        MenuBall::get()->setHandlingTouch(true);
+        getStyle()->hide();
+        Popup::onClose(nullptr);
+    }
+
     CocosPopup *CocosPopup::get() {
         if (CCScene::get()->getChildByType<CocosPopup>(0)) {
             return CCScene::get()->getChildByType<CocosPopup>(0);
@@ -119,6 +127,7 @@ namespace summit::ui::styles {
         m_mainLayer->setScale(0.0f);
         CCScene::get()->addChild(this, 9999999);
         m_mainLayer->runAction(CCEaseElasticOut::create(CCScaleTo::create(0.5f, s), 1.2f));
+        MenuBall::get()->setHandlingTouch(false);
     }
 
     void CocosPopup::onTab(CCObject *sender) {

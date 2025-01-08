@@ -1,6 +1,5 @@
 #include "../../ui/UIManager.hpp"
 #include "Shortcuts.hpp"
-#include "../../Summit.hpp"
 
 using namespace geode::prelude;
 
