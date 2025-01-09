@@ -5,6 +5,7 @@ namespace summit::utils {
     std::vector<Keybind *> KeyManager::keybinds = {};
 
     void KeyManager::addKeybind(Keybind *keybind) {
+        keybind->key = (Key)summit::Config::get<int>("keybinds." + keybind->id, (int)keybind->key);
         keybinds.push_back(keybind);
     }
 
@@ -140,23 +141,23 @@ namespace summit::utils {
             return Key::Unknown;
     }
 
-    bool KeyManager::onPress(enumKeyCodes keyCode) {
+    bool KeyManager::onPress(enumKeyCodes keyCode, bool repeat) {
         bool handled = false;
         auto key = fromCocos(keyCode);
         for (auto keybind : keybinds) {
             if (keybind->key == key) {
-                keybind->callback();
+                keybind->callback(repeat);
                 if (!keybind->passthrough) handled = true;
             }
         }
         return handled;
     }
 
-    bool KeyManager::onPress(Key key) {
+    bool KeyManager::onPress(Key key, bool repeat) {
         bool handled = false;
         for (auto keybind : keybinds) {
             if (keybind->key == key) {
-                keybind->callback();
+                keybind->callback(repeat);
                 if (!keybind->passthrough) handled = true;
             }
         }
@@ -174,7 +175,7 @@ namespace summit::utils {
 class $modify(cocos2d::CCKeyboardDispatcher) {
     bool dispatchKeyboardMSG(cocos2d::enumKeyCodes keyCode, bool isDown, bool isRepeat) {
         if (isDown) {
-            if (summit::utils::KeyManager::onPress(keyCode)) return true;
+            if (summit::utils::KeyManager::onPress(keyCode, isRepeat)) return true;
         }
         return cocos2d::CCKeyboardDispatcher::dispatchKeyboardMSG(keyCode, isDown, isRepeat);
     }

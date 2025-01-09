@@ -110,7 +110,7 @@ namespace summit::utils {
         std::string id;
         std::string name;
         Key key;
-        std::function<void()> callback;
+        std::function<void(bool isRepeat)> callback;
         bool passthrough = false;
     };
 
@@ -124,8 +124,8 @@ namespace summit::utils {
             static Keybind *getKeybind(std::string id);
             static std::vector<Keybind *> getKeybinds();
             static Key fromCocos(cocos2d::enumKeyCodes code);
-            static bool onPress(cocos2d::enumKeyCodes code);
-            static bool onPress(Key key);
+            static bool onPress(cocos2d::enumKeyCodes code, bool repeat);
+            static bool onPress(Key key, bool repeat);
             static void loadBinds();
     };
 }

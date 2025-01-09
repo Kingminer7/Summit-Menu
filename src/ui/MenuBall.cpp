@@ -46,7 +46,7 @@ bool MenuBall::init() {
 
   utils::KeyManager::addKeybind(new utils::Keybind{
       "open", "Open Summit Menu", utils::Key::Tab,
-      [this] { onPress(); }});
+      [this](bool isRepeat) { if (!isRepeat) onPress(); }});
 
   return true;
 }

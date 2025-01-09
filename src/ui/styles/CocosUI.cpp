@@ -2,11 +2,11 @@
 #include "../MenuBall.hpp"
 #include "../../Summit.hpp"
 #include "../UIManager.hpp"
+#include "../../hacks/Hack.hpp"
 
 namespace summit::ui::styles {
 
     bool CocosPopup::setup() {
-        retain();
         m_currentTab = summit::Config::get<std::string>("ui.current-tab", "Global");
         m_bgSprite->setID("bg"_spr);
         m_mainLayer->setID("main-layer"_spr);
@@ -40,44 +40,44 @@ namespace summit::ui::styles {
         m_mainLayer->addChild(bg);
 
 
-        // for (auto &tab : summit::Menu::get()->getTabs()) {
-        //     auto sprite = CCScale9Sprite::create("square02b_001.png");
-        //     sprite->setContentSize({85.f, 20.f});
-        //     sprite->setOpacity(100);
-        //     sprite->setID("bg");
-        //     CCLabelBMFont *label = CCLabelBMFont::create(tab.name.c_str(), "bigFont.fnt");
-        //     label->limitLabelWidth(80, .575f, 0.01f);
-        //     label->setPosition({42.5f, 10.f});
-        //     label->setID("label");
-        //     auto btn = CCMenuItemSpriteExtra::create(
-        //         sprite,
-        //         this, menu_selector(CocosMenu::onTab)
-        //     );
-        //     btn->addChild(label);
-        //     btn->setID(tab.id);
+        for (auto &tab : summit::ui::getTabs()) {
+            auto sprite = CCScale9Sprite::create("square02b_001.png");
+            sprite->setContentSize({85.f, 20.f});
+            sprite->setOpacity(100);
+            sprite->setID("bg");
+            CCLabelBMFont *label = CCLabelBMFont::create(tab.c_str(), "bigFont.fnt");
+            label->limitLabelWidth(80, .575f, 0.01f);
+            label->setPosition({42.5f, 10.f});
+            label->setID("label");
+            auto btn = CCMenuItemSpriteExtra::create(
+                sprite,
+                this, menu_selector(CocosPopup::onTab)
+            );
+            btn->addChild(label);
+            btn->setID(tab);
 
-        //     tabBtnMenu->addChild(btn);
-        //     tabBtnMenu->updateLayout();
-        //     m_menuBtns.push_back(btn);
+            tabBtnMenu->addChild(btn);
+            tabBtnMenu->updateLayout();
+            m_menuBtns.push_back(btn);
 
-        //     auto menu = ScrollLayer::create({300.f, 280.f});
-        //     menu->setID(tab.id);
-        //     tabHolder->addChild(menu);
+            auto menu = ScrollLayer::create({300.f, 280.f});
+            menu->setID(tab);
+            tabHolder->addChild(menu);
 
-        //     if (tab.id == m_currentMenu) {
-        //         sprite->setColor({50, 50, 50});
-        //     } else {
-        //         menu->setVisible(false);
-        //         sprite->setColor({0, 0, 0});
-        //     }
+            if (tab == m_currentTab) {
+                sprite->setColor({50, 50, 50});
+            } else {
+                menu->setVisible(false);
+                sprite->setColor({0, 0, 0});
+            }
 
-        //     for (SMod mod : tab.mods) {
-        //         if (mod.createNodeCB != nullptr) {
-        //             if (auto node = mod.createNodeCB()) menu->m_contentLayer->addChild(node);
-        //         } else {
-        //         }
-        //     }
-        // }
+            for (auto widget : summit::ui::getWidgets(tab)) {
+                auto w = widget.second->createCocosNode();
+                if (w) {
+                    menu->addChild(w);
+                }
+            }
+        }
 
         return true;
     }
@@ -95,7 +95,6 @@ namespace summit::ui::styles {
 
     void CocosPopup::onClose(CCObject *) {
         MenuBall::get()->setHandlingTouch(true);
-        getStyle()->hide();
         Popup::onClose(nullptr);
     }
 
@@ -111,14 +110,6 @@ namespace summit::ui::styles {
         if (!menu) {
             menu = CocosPopup::create();
             menu->show();
-        }
-    }
-
-    void CocosPopup::destroy() {
-        auto menu = CocosPopup::get();
-        if (menu) {
-            menu->onClose(nullptr);
-            menu->release();
         }
     }
 
@@ -164,11 +155,14 @@ namespace summit::ui::styles {
     }
 
     void CocosUI::hide() {
+        if (auto menu = CocosPopup::get()) {
+            menu->onClose(nullptr);
+        }
         Style::hide();
     }
 
     void CocosUI::toggle() {
-        if (visible) hide();
+        if (visible && CocosPopup::get()) hide(); 
         else show();
     }
 }
