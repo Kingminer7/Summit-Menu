@@ -58,6 +58,15 @@ namespace summit::ui {
         return this->tab;
     }
 
+    Widget *Widget::setSize(CocosSize size) {
+        this->size = size;
+        return this;
+    }
+
+    CocosSize Widget::getSize() {
+        return this->size;
+    }
+
     void Widget::renderImgui() {
         ImGui::NewLine();
         for (std::string id : this->order) {
@@ -68,8 +77,20 @@ namespace summit::ui {
         }
     }
 
-    CCNode *Widget::createCocosNode() {
-        return nullptr;
+    CCNode *Widget::createCocosNode(CCSize size) {
+        CCNode *node = CCNode::create();
+        node->setContentSize(size);
+        for (std::string id : this->order) {
+            if (auto comp = this->components[id]) {
+                if (auto child = comp->createCocosNode()) {
+                    node->addChild(child);
+                }
+            }
+        }
+        auto lb = CCLabelBMFont::create("test", "bigFont.fnt");
+        node->addChildAtPosition(lb, Anchor::Center, {0, 0});
+        node->setID(this->id);
+        return node;
     }
 
     Widget *Widget::setExclusivity(Exclusivity exclusivity) {
@@ -129,7 +150,6 @@ namespace summit::ui {
     }
 
     CCNode *Label::createCocosNode() {
-        // Create label node
         return nullptr;
     }
 
@@ -178,7 +198,7 @@ namespace summit::ui {
 
     std::pair<std::string, std::string>Button::getFont() {
         return this->font;
-    }
+    } 
 
     // Toggle
 

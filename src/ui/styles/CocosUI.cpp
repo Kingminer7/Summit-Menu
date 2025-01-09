@@ -2,7 +2,6 @@
 #include "../MenuBall.hpp"
 #include "../../Summit.hpp"
 #include "../UIManager.hpp"
-#include "../../hacks/Hack.hpp"
 
 namespace summit::ui::styles {
 
@@ -39,8 +38,9 @@ namespace summit::ui::styles {
         bg->ignoreAnchorPointForPosition(true);
         m_mainLayer->addChild(bg);
 
-
-        for (auto &tab : summit::ui::getTabs()) {
+        auto tabs = summit::ui::getTabs();
+        std::reverse(tabs.begin(), tabs.end());
+        for (auto &tab : tabs) {
             auto sprite = CCScale9Sprite::create("square02b_001.png");
             sprite->setContentSize({85.f, 20.f});
             sprite->setOpacity(100);
@@ -62,6 +62,7 @@ namespace summit::ui::styles {
 
             auto menu = ScrollLayer::create({300.f, 280.f});
             menu->setID(tab);
+            m_menus.push_back(menu);
             tabHolder->addChild(menu);
 
             if (tab == m_currentTab) {
@@ -71,10 +72,58 @@ namespace summit::ui::styles {
                 sprite->setColor({0, 0, 0});
             }
 
+            float height = 0.f;
+            bool half = false;
+            std::vector<Widget *> queue;
+            
             for (auto widget : summit::ui::getWidgets(tab)) {
-                auto w = widget.second->createCocosNode();
-                if (w) {
-                    menu->addChild(w);
+                if (widget.second->getSize() == CocosSize::Full) {
+                    if (half) {
+                        queue.push_back(widget.second);
+                    } else {
+                        if (!queue.empty()) {
+                            for (auto widget : queue) {
+                                auto node = widget->createCocosNode({300.f, 40.f});
+                                node->setZOrder(1);
+                                height += node->getContentSize().height;
+                                menu->m_contentLayer->setContentSize({300, clamp<float>(height, 280, FLT_MAX)});
+                                node->setPosition({0.f, menu->m_contentLayer->getContentHeight() - height});
+                                menu->m_contentLayer->addChild(node);
+                            }
+                            queue.clear();
+                        }
+                        auto node = widget.second->createCocosNode({300.f, 40.f});
+                        node->setZOrder(1);
+                        height += node->getContentSize().height;
+                        menu->m_contentLayer->setContentSize({300, clamp<float>(height, 280, FLT_MAX)});
+                        node->setPosition({0.f, menu->m_contentLayer->getContentHeight() - height});
+                        menu->m_contentLayer->addChild(node);
+                    }
+                } else {
+                    if (!half) {
+                        if (!queue.empty()) {
+                            for (auto widget : queue) {
+                                auto node = widget->createCocosNode({300.f, 40.f});
+                                node->setZOrder(1);
+                                height += node->getContentSize().height;
+                                menu->m_contentLayer->setContentSize({300, clamp<float>(height, 280, FLT_MAX)});
+                                node->setPosition({0.f, menu->m_contentLayer->getContentHeight() - height});
+                                menu->m_contentLayer->addChild(node);
+                            }
+                            queue.clear();
+                        }
+                    }
+                    auto node = widget.second->createCocosNode({150.f, 40.f});
+                    node->setZOrder(1);
+                    if (half) {
+                        node->setPosition({150.f, menu->m_contentLayer->getContentHeight() - height});
+                    } else {
+                        height += node->getContentSize().height;
+                        menu->m_contentLayer->setContentSize({300, clamp<float>(height, 280, FLT_MAX)});
+                        node->setPosition({0.f, menu->m_contentLayer->getContentHeight() - height});
+                    }
+                    menu->m_contentLayer->addChild(node);
+                    half = !half;
                 }
             }
         }

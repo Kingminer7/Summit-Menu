@@ -11,7 +11,12 @@ namespace summit::ui {
         Cocos,
         // Specifics
         ImTabbed,
-        CocosUI
+        CocosUI,
+    };
+
+    enum class CocosSize {
+        Half,
+        Full,
     };
 
     class Component {
@@ -31,6 +36,7 @@ namespace summit::ui {
             std::string id;
             std::string tab;
             Exclusivity exclusivity = Exclusivity::All;
+            CocosSize size = CocosSize::Half;
 
             Widget() {};
 
@@ -54,8 +60,11 @@ namespace summit::ui {
             std::string getTab();
             Widget *setExclusivity(Exclusivity exclusivity);
             Exclusivity getExclusivity();
+            Widget *setSize(CocosSize size);
+            CocosSize getSize();
+
             void renderImgui();
-            CCNode *createCocosNode();
+            CCNode *createCocosNode(CCSize size);
     };
 
     class Label : public Component {
