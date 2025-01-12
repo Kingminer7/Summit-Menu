@@ -118,6 +118,7 @@ namespace summit::utils {
         protected:
             static std::vector<Keybind *> keybinds;
         public:
+            static std::map<std::string, Key> getStringBinds();
             static void addKeybind(Keybind *keybind);
             static void removeKeybind(std::string id);
             static void clearKeybinds();
