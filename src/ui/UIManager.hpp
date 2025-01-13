@@ -29,12 +29,5 @@ namespace summit::ui {
     */
     bool setStyle(std::string id);
 
-    /**
-    @brief Sets the current UI style.
-    @param style The style to use. This style must already be added.
-    @return Whether it set successfully or not.
-    */
-    bool setStyle(styles::Style *style);
-
     #define RegisterStyle(T) $on_mod(Loaded) { addStyle(new T); }
 }
