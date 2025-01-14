@@ -12,10 +12,7 @@ public:
   std::string getId() override { return "ImTabbed"; }
 
   void update(float dt) override {
-    ImGui::Begin("test");
-    bool a = true;
-    ImGui::Checkbox("Test", &a);
-    ImGui::End();
+    
   }
 
   void show() override {}

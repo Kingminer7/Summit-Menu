@@ -25,7 +25,7 @@ public:
 
   /**
   @brief Called on the type's respective update function. Only called if its the current style.
-  @param dt The time since the last render.
+  @param dt The time since the last update.
   */
   virtual void update(float dt) {};
 

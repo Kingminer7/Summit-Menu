@@ -1,4 +1,5 @@
 #pragma once
+
 #include "style/Style.hpp"
 
 namespace summit::ui {
