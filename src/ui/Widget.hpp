@@ -6,5 +6,5 @@ namespace summit::ui {
             virtual void init() = 0;
 
             std::string getId();
-    }
+    };
 }
