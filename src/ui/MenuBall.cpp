@@ -102,7 +102,7 @@ void MenuBall::ccTouchMoved(CCTouch *touch, CCEvent *evt) {
     if (ccpDistance(*m_startPos, touch->getLocation()) > 3)
       m_moving = true;
   if (m_moving) {
-    auto pos = touch->getLocation() + diff;
+    auto pos = touch->getLocation() + m_diff;
     pos.x = std::clamp(pos.x, -getContentWidth() / 2,
                        CCDirector::get()->getWinSize().width -
                            getContentWidth() / 2);
