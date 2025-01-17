@@ -8,16 +8,18 @@ namespace summit::ui {
 
     class MenuBall : public CCMenu {
     protected:
-        static MenuBall *instance;
+        static MenuBall *m_instance;
+
+        std::function<void ()> m_callback;
         
         float m_scale = 1.0f;
         float m_multiplier = 0.8f;
-        bool move = false;
-        bool shouldRender = true;
-        bool shouldHandleTouch = true;
+        bool m_moving = false;
+        bool m_render = true;
+        bool m_handleTouch = true;
 
-        CCPoint *startPos;
-        CCPoint diff;
+        CCPoint *m_startPos;
+        CCPoint m_diff;
         
         CCSprite *m_sprite;
 
