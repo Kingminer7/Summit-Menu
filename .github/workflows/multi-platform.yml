@@ -65,3 +65,10 @@ jobs:
         with:
           name: Build Output
           path: ${{ steps.build.outputs.build-output }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Nightly Release
+          path: ${{ steps.build.outputs.build-output }}
+        if: github.ref == 'refs/heads/main'
+  

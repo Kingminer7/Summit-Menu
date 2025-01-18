@@ -3,22 +3,19 @@
 #include <imgui.h>
 
 namespace summit::ui::styles {
-class TestStyle : public Style {
-public:
-  void init() override {}
+  class TestStyle : public Style {
+    public:
+      void init() override {}
+      void update(float dt) override {
 
-  StyleType getStyleType() override { return StyleType::ImGui; }
+      }
 
-  std::string getId() override { return "ImTabbed"; }
+      StyleType getStyleType() override { return StyleType::ImGui; }
+      std::string getId() override { return "ImTabbed"; }
 
-  void update(float dt) override {
-    
-  }
+      void show() override {}
+      void hide() override {}
+  };
 
-  void show() override {}
-
-  void hide() override {}
-};
-
-RegisterStyle(TestStyle)
-} // namespace summit::ui::style
+  RegisterStyle(TestStyle)
+}
