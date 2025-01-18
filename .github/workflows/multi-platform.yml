@@ -51,7 +51,7 @@ jobs:
           bindings: geode-sdk/bindings
           bindings-ref: main
           combine: true
-          build-config: ${{ github.event.inputs.build_type == 'release' && 'release' || 'relwithdebinfo' }}
+          build-config: ${{ github.event.inputs.build_type != 'release' && 'RelWithDebInfo' || 'Release' }}
           export-pdb: ${{ github.event.inputs.build_type == 'release' }}
           target: ${{ matrix.config.target }}
 
@@ -82,10 +82,7 @@ jobs:
           path: ./build-output
       
       - name: Display structure of downloaded files
-        run: ls -R ./build-output
-
-      - name: Extract contents
-        run: unzip -q ./build-output.zip -d ./output
+        run: ls -R ./output
 
       - name: Upload Nightly Release
         uses: andelf/nightly-release@main
