@@ -15,7 +15,7 @@ on:
     branches:
       - "**"
 
-
+      
 jobs:
   build:
     strategy:
@@ -52,7 +52,7 @@ jobs:
           bindings-ref: main
           combine: true
           build-config: ${{ github.event.inputs.build_type != 'release' && 'RelWithDebInfo' || 'Release' }}
-          export-pdb: ${{ github.event.inputs.build_type == 'release' }}
+          export-pdb: ${{ github.event.inputs.build_type != 'release' }}
           target: ${{ matrix.config.target }}
 
   package:
@@ -66,32 +66,30 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Build Output
+          name: build-output
           path: ${{ steps.build.outputs.build-output }}
 
-  nightly:
-    name: Publish Nightly Release
+  nightly: 
+    name: Nightly Release
     runs-on: ubuntu-latest
-    needs: package
-    permissions:
-      contents:
-        write
-    if: github.event.inputs.build_type != 'release' && github.ref == 'refs/heads/main' 
+    needs: ['package']
+    
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
-          name: Build Output
-          path: ./output
+          path: './artifacts/'
 
-      - name: Upload Nightly Release
-        uses: andelf/nightly-release@main
+      #- run: |
+      #    7z x ./artifacts/build-output.zip
+
+      - uses: andelf/nightly-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: nightly
-          name: 'nightly'
-          prerelease: true
-          body: 'Development build of commit ${{ github.sha }}. Built in RelWithDebInfo.'
+          name: 'Development Release'
+          body: |
+            Development release for commit ${{ github.sha }}. Built in RelWithDebInfo.
           files: |
-            $(for file in $(find ./output -type f); do echo "$file"; done)
+            ./artifacts/build-output/*.geode
+            ./artifacts/build-output/*.pdb
