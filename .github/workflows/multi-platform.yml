@@ -73,6 +73,9 @@ jobs:
     name: Publish Nightly Release
     runs-on: ubuntu-latest
     needs: package
+    permissions:
+      contents:
+        write
     if: github.event.inputs.build_type != 'release' && github.ref == 'refs/heads/main' 
     steps:
       - name: Download artifact
