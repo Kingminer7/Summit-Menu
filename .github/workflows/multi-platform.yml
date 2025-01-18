@@ -69,27 +69,29 @@ jobs:
           name: Build Output
           path: ${{ steps.build.outputs.build-output }}
 
-  publish-nightly:
-    name: Publish
+  nightly:
+    name: Publish Nightly Release
     runs-on: ubuntu-latest
-    needs: [ package ]
-    if: github.ref == 'refs/heads/main' && github.event.inputs.build_type != 'release'
+    needs: package
+    if: github.event.inputs.build_type != 'release'
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download Artifacts
+      - name: Download artifact
         uses: actions/download-artifact@v4
+        with:
+          name: Build Output
+          path: ./build-output
 
-      - name: Update Development Release
+      - name: Extract contents
+        run: unzip -q ./build-output.zip -d ./output
+
+      - name: Upload Nightly Release
         uses: andelf/nightly-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: nightly
-          name: 'Development Release'
-          body: |
-            Development release for ${{ github.repository }}. Built using RelWithDebInfo, expect larger file size.
+          name: 'nightly'
+          prerelease: true
+          body: 'Development build of commit ${{ github.sha }}. Built in RelWithDebInfo.'
           files: |
-            ${{ steps.build.outputs.build-output }}/*.pdb
-            ${{ steps.build.outputs.build-output }}/*.geode
+            $(for file in $(find ./output -type f); do echo "$file"; done)
