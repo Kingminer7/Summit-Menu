@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Build Output
-          path: ./build-output
+          path: ./build-output.zip
 
       - name: Extract contents
         run: unzip -q ./build-output.zip -d ./output
