@@ -118,7 +118,7 @@ jobs:
       - name: Read mod version & mod id
         id: read_version
         run: |
-          MOD_VERSION=MOD_VERSION=$(jq -r '.version' mod.json)
+          MOD_VERSION=$(jq -r '.version' mod.json)
           set +e
           curl --fail "https://api.github.com/repos/geode-sdk/geode/releases/tags/v$VERSION" --silent --output /dev/null
           RESULT=$?
@@ -129,7 +129,6 @@ jobs:
             exit 1
           fi
           echo "MOD_VERSION=$MOD_VERSION" >> $GITHUB_ENV
-          echo "MOD_ID=$(jq -r '.id' mod.json)" >> $GITHUB_ENV
       - name: Create Draft Release
         uses: softprops/action-gh-release@v1
         env:
@@ -144,5 +143,5 @@ jobs:
              - remove this
           draft: true
           files: |
-            ./artifacts/${{env.MOD_ID}}.geode
-            ./artifacts/${{env.MOD_ID}}.pdb
+            ./artifacts/build-output/*.geode
+            ./artifacts/build-output/*.pdb
