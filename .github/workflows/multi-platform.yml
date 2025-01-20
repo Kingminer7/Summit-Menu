@@ -123,7 +123,7 @@ jobs:
       - name: Read changelog
         id: read_changelog
         run: |
-          VER_CHANGES=$(awk '/^# /{if (p) exit; p=1; next} p' CHANGELOG.md)
+          VER_CHANGES=$(awk '/^# /{if (p) exit; p=1; next} p' changelog.md)
           echo "VER_CHANGES=$VER_CHANGES" >> $GITHUB_ENV
           
       - name: Create Release
