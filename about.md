@@ -1,3 +1,5 @@
-# Template Mod
+# Summit Menu
 
-Edit about.md to change this
+The BEST menu for Geometry Dash (if you exclude every other menu)
+
+hopefully i remember to change this lol
