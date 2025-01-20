@@ -31,12 +31,13 @@ bool setStyle(std::string id) {
   if (currentStyle->getStyleType() == styles::StyleType::ImGui)
     ImGuiCocos::get().setup([] {
       currentStyle->init();
+      ImGui::GetIO().IniFilename = NULL;
     }).draw([] () {
       currentStyle->update(ImGui::GetIO().DeltaTime);
     });
   return true;
 }
-} // namespace summit::ui
+}
 
 #include <Geode/modify/MenuLayer.hpp>
 class $modify (UIInitMLHook, MenuLayer) {
