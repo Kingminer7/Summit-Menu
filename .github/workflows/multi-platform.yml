@@ -115,20 +115,34 @@ jobs:
         with:
           path: './artifacts/'
       
-      - name: Read mod version
+      - name: Read mod version & mod id
         id: read_version
         run: |
-          echo "MOD_VERSION=$(jq -r '.version' mod.json)" >> $GITHUB_ENV
+          MOD_VERSION=MOD_VERSION=$(jq -r '.version' mod.json)
+          set +e
+          curl --fail "https://api.github.com/repos/geode-sdk/geode/releases/tags/v$VERSION" --silent --output /dev/null
+          RESULT=$?
+          set -e
           
-      - name: Create Release
-        id: create_release
-        uses: comnoco/create-release-action@v2
+          if [ $RESULT -eq 0 ]; then
+            echo "Release already exists! Not replacing it.."
+            exit 1
+          fi
+          echo "MOD_VERSION=$MOD_VERSION" >> $GITHUB_ENV
+          echo "MOD_ID=$(jq -r '.id' mod.json)" >> $GITHUB_ENV
+      - name: Create Draft Release
+        uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_name: ${{ env.MOD_VERSION }}
           tag_name: ${{ env.MOD_VERSION }}
+          name: ${{ env.MOD_VERSION }}
           body: |
-            Make sure you change this changelog before release.
+            TODO before publishing:
+             - mark if pre-release
+             - add changelog
+             - remove this
           draft: true
-          prerelease: false  
+          files: |
+            ./artifacts/${{env.MOD_ID}}.geode
+            ./artifacts/${{env.MOD_ID}}.pdb
