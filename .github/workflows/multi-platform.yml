@@ -119,12 +119,6 @@ jobs:
         id: read_version
         run: |
           echo "MOD_VERSION=$(jq -r '.version' mod.json)" >> $GITHUB_ENV
-
-      - name: Read changelog
-        id: read_changelog
-        run: |
-          VER_CHANGES=$(awk '/^# /{if (p) exit; p=1; next} p' changelog.md)
-          echo "VER_CHANGES=$VER_CHANGES" >> $GITHUB_ENV
           
       - name: Create Release
         id: create_release
@@ -134,6 +128,7 @@ jobs:
         with:
           release_name: ${{ env.MOD_VERSION }}
           tag_name: ${{ env.MOD_VERSION }}
-          body: ${{ env.VER_CHANGES }}
+          body: |
+            Make sure you change this changelog before release.
           draft: true
           prerelease: false  
