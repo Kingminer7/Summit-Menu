@@ -23,16 +23,19 @@ styles::Style *getStyle(std::string id) {
 styles::Style *getStyle() { return currentStyle; }
 
 bool setStyle(std::string id) {
+  geode::log::info("{}", id);
   if (!styleMap.contains(id))
     return false;
   if (currentStyle && currentStyle->getStyleType() == styles::StyleType::ImGui)
     ImGuiCocos::get().destroy();
   currentStyle = styleMap.at(id);
+  geode::log::info("{}", id);
   if (currentStyle->getStyleType() == styles::StyleType::ImGui)
     ImGuiCocos::get().setup([] {
       currentStyle->init();
       ImGui::GetIO().IniFilename = NULL;
     }).draw([] () {
+      geode::log::info("Rendering {}", id);
       currentStyle->update(ImGui::GetIO().DeltaTime);
     });
   return true;
