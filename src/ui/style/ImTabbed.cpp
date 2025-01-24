@@ -9,6 +9,7 @@ namespace summit::ui::styles {
     public:
       void init() override {}
       void update(float dt) override {
+        if(!visible) return;
         for (auto tab : getTabs()) {
           ImGui::SetNextWindowSize(ImVec2(300 * ImGui::GetIO().DisplaySize.x / 2400, 400 * ImGui::GetIO().DisplaySize.x / 2400));
           ImGui::Begin(tab.c_str());
