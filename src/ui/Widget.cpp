@@ -81,6 +81,14 @@ namespace summit::ui {
     tabs.insert({tab, {}});
     return true;
   }
+
+  std::vector<std::string> getTabs() {
+    std::vector<int> keys;
+    for (const auto& pair : tabs) {
+        keys.push_back(pair.first);
+    }
+    return keys;
+  }
 }
 
 $on_mod(Loaded) {
