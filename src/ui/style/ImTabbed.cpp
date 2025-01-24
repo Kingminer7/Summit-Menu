@@ -1,7 +1,7 @@
 #include "../UIManager.hpp"
 #include "Style.hpp"
 #include <Config.hpp>
-#include <hacks/Hack.hpp>
+#include "../Widget.hpp"
 #include <imgui.h>
 
 namespace summit::ui::styles {
@@ -9,7 +9,7 @@ namespace summit::ui::styles {
     public:
       void init() override {}
       void update(float dt) override {
-        for (auto tab : hacks::getTabs()) {
+        for (auto tab : getTabs()) {
           ImGui::SetNextWindowSize(ImVec2(300 * ImGui::GetIO().DisplaySize.x / 2400, 400 * ImGui::GetIO().DisplaySize.x / 2400));
           ImGui::Begin(tab.c_str());
           ImGui::SetWindowFontScale(16 * ImGui::GetIO().DisplaySize.x / 24000);
