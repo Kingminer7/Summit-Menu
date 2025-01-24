@@ -45,11 +45,11 @@ class $modify (UIInitMLHook, MenuLayer) {
         static bool inited = false;
         if (!inited) {
             inited = true;
-            #ifdef GEODE_IS_MOBILE
-            summit::ui::setStyle("CocosUI");
-            #else
+            // #ifdef GEODE_IS_MOBILE
+            // summit::ui::setStyle("CocosUI");
+            // #else
             summit::ui::setStyle("ImTabbed");
-            #endif
+            // #endif
         }
         return MenuLayer::init();
     }
