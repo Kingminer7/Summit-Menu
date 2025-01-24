@@ -90,4 +90,5 @@ namespace summit::ui {
   std::map<std::string, Widget *> getWidgets(std::string tab);
   Widget *getWidget(std::string id, std::string tab);
   bool registerTab(std::string tab);
+  std::vector<std::string> getTabs();
 }
