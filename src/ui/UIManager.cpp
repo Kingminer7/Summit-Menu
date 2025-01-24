@@ -34,7 +34,7 @@ bool setStyle(std::string id) {
     ImGuiCocos::get().setup([] {
       currentStyle->init();
       ImGui::GetIO().IniFilename = NULL;
-    }).draw([] () {
+    }).draw([id] () {
       geode::log::info("Rendering {}", id);
       currentStyle->update(ImGui::GetIO().DeltaTime);
     });
