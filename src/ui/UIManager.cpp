@@ -1,5 +1,6 @@
 #include "UIManager.hpp"
 #include "style/Style.hpp"
+#include "MenuBall.hpp"
 #include <imgui-cocos.hpp>
 
 namespace summit::ui {
