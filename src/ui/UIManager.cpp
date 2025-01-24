@@ -35,6 +35,9 @@ bool setStyle(std::string id) {
     }).draw([] () {
       currentStyle->update(ImGui::GetIO().DeltaTime);
     });
+  MenuBall::get()->setCallback([currentStyle] () {
+    currentStyle->toggle();
+  });
   return true;
 }
 }
