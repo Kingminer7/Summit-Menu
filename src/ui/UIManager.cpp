@@ -35,8 +35,8 @@ bool setStyle(std::string id) {
     }).draw([] () {
       currentStyle->update(ImGui::GetIO().DeltaTime);
     });
-  MenuBall::get()->setCallback([currentStyle] () {
-    currentStyle->toggle();
+  summit::ui::MenuBall::get()->setCallback([this] () {
+    this->currentStyle->toggle();
   });
   return true;
 }
