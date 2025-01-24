@@ -83,7 +83,7 @@ namespace summit::ui {
   }
 
   std::vector<std::string> getTabs() {
-    std::vector<int> keys;
+    std::vector<std::string> keys;
     for (const auto& pair : tabs) {
         keys.push_back(pair.first);
     }
