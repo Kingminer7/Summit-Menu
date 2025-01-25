@@ -13,6 +13,9 @@ namespace summit::ui::styles {
         for (auto tab : getTabs()) {
           ImGui::SetNextWindowSize(ImVec2(300 * ImGui::GetIO().DisplaySize.x / 2400, 400 * ImGui::GetIO().DisplaySize.x / 2400));
           ImGui::Begin(tab.c_str());
+          for (const auto& pair : getWidgets(tab)) {
+            pair.second->imRender();
+          }
           ImGui::SetWindowFontScale(16 * ImGui::GetIO().DisplaySize.x / 24000);
           ImGui::End();
         }
