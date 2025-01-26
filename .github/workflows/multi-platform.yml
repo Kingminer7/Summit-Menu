@@ -46,13 +46,14 @@ jobs:
         run: echo "RELEASE_BUILD=${{ github.event.inputs.build_type == 'release' }}" >> $GITHUB_ENV
 
       - name: Build the mod
-        uses: geode-sdk/build-geode-mod@main
+        uses: hiimjasmine00/build-geode-mod@main
         with:
           bindings: geode-sdk/bindings
           bindings-ref: main
           combine: true
           build-config: ${{ github.event.inputs.build_type != 'release' && 'RelWithDebInfo' || 'Release' }}
           export-pdb: ${{ github.event.inputs.build_type != 'release' }}
+          export-symbols: ${{ github.event.inputs.build_type != 'release' }}
           target: ${{ matrix.config.target }}
 
   package:
