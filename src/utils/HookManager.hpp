@@ -1,3 +1,4 @@
+#ifdef im_disabling_this_for_now
 #include "Geode/loader/Hook.hpp"
 namespace summit {
   class HookManager {
@@ -17,3 +18,4 @@ namespace summit {
     HookManager::registerHook(fmt::format("{}/{}", ns, id), hook); \
   } while (0);
 }
+#endif

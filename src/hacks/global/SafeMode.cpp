@@ -40,10 +40,10 @@ namespace summit::hacks::global {
         } else PlayLayer::destroyPlayer(p,g);
     }
 
-    static void onModify(auto& self) {
-      SETUP_HOOK("global.safemode", "PlayLayer::levelComplete", false)
-      SETUP_HOOK("global.safemode", "PlayLayer::destroyPlayer", false)
-    }
+    // static void onModify(auto& self) {
+    //    SETUP_HOOK("global.safemode", "PlayLayer::levelComplete", false)
+    //    SETUP_HOOK("global.safemode", "PlayLayer::destroyPlayer", false)
+    // }
   };
 
   RegisterHack(SafeMode)
