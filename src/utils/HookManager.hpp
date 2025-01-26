@@ -10,10 +10,10 @@ namespace summit {
   };
 
   #define SETUP_HOOK(ns, id, enabled) do { \
-  auto hook = self.getHook(id); \
-  if (hook) { \
+    auto hookres = self.getHook(id); \
+    if (!hookres) return; \
+    auto hook = hookres.unwrap(); \
     hook->setAutoEnable(enabled); \
     HookManager::registerHook(fmt::format("{}/{}", ns, id), hook); \
-  } \
-  } while (0)
+  } while (0);
 }
