@@ -99,6 +99,7 @@ jobs:
           files: |
             ./artifacts/build-output/*.geode
             ./artifacts/build-output/*.pdb
+            ./artifacts/build-output/*.sym
 
   release:
     name: Create Draft Release
@@ -146,3 +147,4 @@ jobs:
           files: |
             ./artifacts/build-output/*.geode
             ./artifacts/build-output/*.pdb
+            ./artifacts/build-output/*.sym
