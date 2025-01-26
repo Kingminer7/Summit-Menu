@@ -1,4 +1,5 @@
 #include "MenuBall.hpp"
+#include <Loader.hpp>
 // #include "../Summit.hpp"
 // #include "../ui/UIManager.hpp"
 // #include "../KeyManager.hpp"
@@ -125,6 +126,14 @@ namespace summit::ui {
     // setVisible(isRendered());
   }
 
+
+  std::function<void()> MenuBall::getCallback() {
+    return m_callback;
+  }
+  void MenuBall::setCallback(std::function<void()> callback) {
+    m_callback = callback;
+  }
+
   bool MenuBall::isRendered() {
     // if (!summit::Config::get<bool>("config.showball", false)) return false;
     return m_render;
@@ -144,19 +153,11 @@ namespace summit::ui {
 
 }
 
-#include <Geode/modify/MenuLayer.hpp>
-class $modify(MenuLayer) {
-  bool init() {
-    if (!MenuLayer::init())
-      return false;
-    static bool initialized = false;
-    if (!initialized) {
-      MenuBall::get();
-      initialized = true;
-    }
-    return true;
-  }
-};
+$execute {
+  summit::Loader::onLoad([](){
+  MenuBall::get();
+  }, 0, summit::LoadTime::MenuLayer);
+}
 
 #include <Geode/modify/CCScene.hpp>
 

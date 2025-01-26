@@ -1,4 +1,5 @@
 #include "Hack.hpp"
+#include <Loader.hpp>
 
 namespace summit::hacks {
     std::map <std::string, Hack *> hacks = {};
@@ -39,5 +40,11 @@ namespace summit::hacks {
         for (auto& [id, hack] : hacks) {
             hack->init();
         }
+    }
+
+    $execute {
+        summit::Loader::onLoad([](){
+        summit::hacks::init();
+        },  1, summit::LoadTime::Early);
     }
 }

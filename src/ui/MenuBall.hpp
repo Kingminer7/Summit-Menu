@@ -39,7 +39,7 @@ namespace summit::ui {
       void update(float dt) override;
 
       std::function<void()> getCallback();
-      void setCallback(std::function<void()>);
+      void setCallback(std::function<void()> callback);
       bool isRendered();
       void setRendered(bool render);
       bool isHandlingTouch();

@@ -11,6 +11,7 @@
 	"version": "v1.0.0-alpha.1",
 	"developer": "km7dev",
 	"description": "generic mod menu lol",
+	"early-load": true,
 	"resources": {
 		"spritesheets": {
 			"SM_summitSheet01": [

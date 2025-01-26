@@ -1,3 +1,4 @@
+#include <Loader.hpp>
 #pragma once
 
 namespace summit::hacks {
@@ -18,5 +19,5 @@ namespace summit::hacks {
     bool registerHack(Hack *hack);
     bool removeHack(std::string id);
 
-    #define RegisterHack(T) $on_mod(Loaded) { registerHack(new T); }
+    #define RegisterHack(T) $execute { registerHack(new T); }; 
 }

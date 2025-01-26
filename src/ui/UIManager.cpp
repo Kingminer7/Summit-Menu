@@ -1,4 +1,6 @@
 #include "UIManager.hpp"
+#include "Geode/DefaultInclude.hpp"
+#include <Loader.hpp>
 #include "style/Style.hpp"
 #include "MenuBall.hpp"
 #include <imgui-cocos.hpp>
@@ -36,25 +38,19 @@ bool setStyle(std::string id) {
     }).draw([] () {
       currentStyle->update(ImGui::GetIO().DeltaTime);
     });
-  summit::ui::MenuBall::get()->setCallback([currentStyle] () {
-    currentStyle->toggle();
+  summit::ui::MenuBall::get()->setCallback([] () {
+    summit::ui::currentStyle->toggle();
   });
   return true;
 }
 }
 
-#include <Geode/modify/MenuLayer.hpp>
-class $modify (UIInitMLHook, MenuLayer) {
-    bool init() {
-        static bool inited = false;
-        if (!inited) {
-            inited = true;
-            // #ifdef GEODE_IS_MOBILE
-            // summit::ui::setStyle("CocosUI");
-            // #else
-            summit::ui::setStyle("ImTabbed");
-            // #endif
-        }
-        return MenuLayer::init();
-    }
-};
+$execute {
+  summit::Loader::onLoad([](){
+    // #ifdef GEODE_IS_MOBILE
+    // summit::ui::setStyle("CocosUI");
+    // #else
+    summit::ui::setStyle("ImTabbed");
+    // #endif
+  }, 2);
+}

@@ -1,3 +1,5 @@
+#pragma once
+
 namespace summit::ui {
   enum class WidgetType {
     Label,
@@ -16,7 +18,7 @@ namespace summit::ui {
     protected:
       std::string id;
       std::string label;
-      virtual void init() = 0;
+      Component () {}
     public:
       std::string getId();
       std::string getLabel();
@@ -44,29 +46,33 @@ namespace summit::ui {
 
   class LabelComponent : public Component {
     protected:
-      void init() override;
+      void init(std::string id, std::string text);
     public:
       LabelComponent *setLabel(std::string label);
       void imRender() override;
+      std::string getType() override;
+      static LabelComponent *create(std::string id, std::string text);
   };
 
   class ToggleComponent : public Component {
     protected:
-      void init() override;
+      void init(std::string id, std::string text, bool default_, std::function<void (bool toggled)> callback);
       bool toggled = false;
       std::function<void (bool toggled)> callback;
     public:
       ToggleComponent *setLabel(std::string label);
+      void imRender() override;
+      std::string getType() override;
       ToggleComponent *setCallback(std::function<void (bool toggled)> callback);
       std::function<void (bool toggled)> getCallback();
       bool isToggled();
       ToggleComponent *setToggled(bool toggled, bool triggerCallback = false);
-      void imRender() override;
+      static ToggleComponent *create(std::string id, std::string text, bool default_, std::function<void (bool toggled)> callback);
   };
 
   class ButtonComponent : public Component {
     protected:
-      void init() override;
+      void init();
       std::function<void ()> callback;
     public:
       ButtonComponent *setLabel(std::string label);
@@ -77,7 +83,7 @@ namespace summit::ui {
 
   class FloatComponent : public Component {
     protected:
-      void init() override;
+      void init();
       std::function<void ()> callback;
       float value = 0.f;
     public:
@@ -88,6 +94,7 @@ namespace summit::ui {
   };
 
   std::map<std::string, Widget *> getWidgets(std::string tab);
+  std::map<std::string, std::map<std::string, Widget *>> getWidgets();
   Widget *getWidget(std::string id, std::string tab);
   bool registerTab(std::string tab);
   std::vector<std::string> getTabs();

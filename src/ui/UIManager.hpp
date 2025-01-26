@@ -11,5 +11,5 @@ namespace summit::ui {
 
     bool setStyle(std::string id);
 
-    #define RegisterStyle(T) $on_mod(Loaded) { addStyle(new T); }
+    #define RegisterStyle(T) $execute { addStyle(new T); }
 }
