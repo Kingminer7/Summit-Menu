@@ -2,7 +2,7 @@
 #include <ui/Widget.hpp>
 
 namespace summit::hacks::global {
-  class TestHack : public Hack {
+  class SafeMode : public Hack {
     public:
       void init() {
         ui::Widget::create("TestWidget", 
@@ -10,9 +10,6 @@ namespace summit::hacks::global {
           
         }))
         ->registerWidget("Global");
-      }
-      void update(float dt) {
-
       }
 
       std::string getId() {
@@ -23,5 +20,5 @@ namespace summit::hacks::global {
       }
   };
 
-  RegisterHack(TestHack)
+  RegisterHack(SafeMode)
 }

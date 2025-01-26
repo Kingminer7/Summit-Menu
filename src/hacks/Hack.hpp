@@ -1,4 +1,4 @@
-#include <Loader.hpp>
+#include <utils/Loader.hpp>
 #pragma once
 
 namespace summit::hacks {
@@ -6,7 +6,7 @@ namespace summit::hacks {
         public:
             virtual void init() = 0;
             virtual void update(float dt) {};
-
+            virtual bool isCheating() { return false; }
             virtual std::string getId() = 0;
             virtual std::string getTab() = 0;
     };

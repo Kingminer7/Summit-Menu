@@ -1,5 +1,4 @@
 #include "Hack.hpp"
-#include <Loader.hpp>
 
 namespace summit::hacks {
     std::map <std::string, Hack *> hacks = {};
