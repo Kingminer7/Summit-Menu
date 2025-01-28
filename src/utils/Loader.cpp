@@ -7,11 +7,13 @@ namespace summit {
   std::multimap<int, std::pair<std::function<void ()>, LoadTime>> Loader::callbacks = {};
 
   void Loader::onLoad(std::function<void ()> func, int prio, LoadTime loadTime) {
+    if (!func) return;
     callbacks.insert({prio, {func, loadTime}});
   }
 
   // so args can swap idrk
   void Loader::onLoad(std::function<void ()> func, LoadTime loadTime, int prio) {
+    if (!func) return;
     callbacks.insert({prio, {func, loadTime}});
   }
 
