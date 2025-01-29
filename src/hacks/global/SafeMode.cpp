@@ -7,12 +7,10 @@
 namespace summit::hacks::global {
   class SafeMode : public Hack {
     public:
-      ui::Component *comp;
       void init() {
-        comp = ui::ToggleComponent::create("global.safemode", "Safe Mode", Config::get("global.safemode.enabled", false), [](bool toggled){
+        ui::ToggleComponent::create("global.safemode", "Safe Mode", Config::get("global.safemode.enabled", false), [](bool toggled){
           Config::set("global.safemode.enabled", toggled);
-        });
-        ui::Widget::create("global.safemode", comp)->registerWidget("Global");
+        })->setTab("Global")->reg();
       }
 
       std::string getId() {

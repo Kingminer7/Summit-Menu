@@ -18,30 +18,15 @@ namespace summit::ui {
     protected:
       std::string id;
       std::string label;
+      std::string tab;
       Component () {}
     public:
       std::string getId();
       std::string getLabel();
+      std::string getTab();
       virtual std::string getType() = 0;
       virtual void imRender() = 0;
-  };
-
-  class Widget {
-    protected:
-      std::string id;
-      std::string tab;
-      Component *component;
-      std::map<std::string, Component*> subs;
-
-      void init(std::string id, Component *component);
-      Widget () {}
-    public:
-      static Widget *create(std::string id, Component *component);
-      Component *getComponent();
-      std::string getId();
-      std::string getTab();
-      bool registerWidget(std::string tab);
-      Widget *setComponent(Component *component);
+      bool reg();
   };
 
   class LabelComponent : public Component {
@@ -49,6 +34,7 @@ namespace summit::ui {
       void init(std::string id, std::string text);
     public:
       LabelComponent *setLabel(std::string label);
+      LabelComponent *setTab(std::string tab);
       void imRender() override;
       std::string getType() override;
       static LabelComponent *create(std::string id, std::string text);
@@ -61,6 +47,7 @@ namespace summit::ui {
       std::function<void (bool toggled)> callback;
     public:
       ToggleComponent *setLabel(std::string label);
+      ToggleComponent *setTab(std::string tab);
       void imRender() override;
       std::string getType() override;
       ToggleComponent *setCallback(std::function<void (bool toggled)> callback);
@@ -72,30 +59,47 @@ namespace summit::ui {
 
   class ButtonComponent : public Component {
     protected:
-      void init();
+      void init(std::string id, std::string text, std::function<void ()> callback);
       std::function<void ()> callback;
     public:
       ButtonComponent *setLabel(std::string label);
+      ButtonComponent *setTab(std::string tab);
+      void imRender() override;
+      std::string getType() override;
       ButtonComponent *setCallback(std::function<void ()> callback);
       std::function<void ()> getCallback();
-      void imRender() override;
+      static ButtonComponent *create(std::string id, std::string text, std::function<void ()> callback);
   };
 
   class FloatComponent : public Component {
     protected:
-      void init();
+      void init(std::string id, std::string text, std::function<void ()> callback);
       std::function<void ()> callback;
-      float value = 0.f;
     public:
-      FloatComponent *setLabel(std::string label);
-      FloatComponent *setCallback(std::function<void ()> callback);
-      std::function<void ()> getCallback();
+      FloatComponent *setTab(std::string tab);
+      ButtonComponent *setLabel(std::string label);
       void imRender() override;
+      std::string getType() override;
+      ButtonComponent *setCallback(std::function<void ()> callback);
+      std::function<void ()> getCallback();
+      static ButtonComponent *create(std::string id, std::string text, std::function<void ()> callback);
   };
 
-  std::map<std::string, Widget *> getWidgets(std::string tab);
-  std::map<std::string, std::map<std::string, Widget *>> getWidgets();
-  Widget *getWidget(std::string id, std::string tab);
+  // class FloatComponent : public Component {
+  //   protected:
+  //     void init();
+  //     std::function<void ()> callback;
+  //     float value = 0.f;
+  //   public:
+  //     FloatComponent *setLabel(std::string label);
+  //     FloatComponent *setCallback(std::function<void ()> callback);
+  //     std::function<void ()> getCallback();
+  //     void imRender() override;
+  // };
+
+  std::map<std::string, Component *> getComponents(std::string tab);
+  std::map<std::string, std::map<std::string, Component *>> getComponents();
+  Component *getComponent(std::string id, std::string tab);
   bool registerTab(std::string tab);
   std::vector<std::string> getTabs();
 }
