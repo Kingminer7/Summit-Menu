@@ -9,7 +9,9 @@ namespace summit::hacks::global {
     public:
       ui::Component *comp;
       void init() {
-        comp = ui::ToggleComponent::create("global.safemode", "Safe Mode", Config::get("global.safemode", false), [](bool toggled){});
+        comp = ui::ToggleComponent::create("global.safemode", "Safe Mode", Config::get("global.safemode.enabled", false), [](bool toggled){
+          Config::set("global.safemode.enabled", toggled);
+        });
         ui::Widget::create("global.safemode", comp)->registerWidget("Global");
       }
 
