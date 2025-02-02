@@ -46,12 +46,14 @@ public:
       popup->removeMeAndCleanup();
   }
   void open() override {
+    if (m_open) return;
     m_open = true;
     if (!popup)
       popup = CocosUIPopup::create();
     popup->show();
   }
   void close() override {
+    if (!m_open) return;
     m_open = false;
     if (popup)
       popup->onExit();
