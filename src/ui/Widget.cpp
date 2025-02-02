@@ -2,7 +2,6 @@
 #include <utils/Loader.hpp>
 #include <imgui.h>
 namespace summit::ui {
-
   // <tab <id, widget>>
   std::map<std::string, std::map<std::string, Component *>> tabs = {};
 
@@ -153,6 +152,61 @@ namespace summit::ui {
   }
 
 
+  FloatComponent *FloatComponent::setLabel(std::string label) {
+    this->label = label;
+    return this;
+  }
+
+  FloatComponent *FloatComponent::setTab(std::string tab) {
+    this->tab = tab;
+    return this;
+  }
+
+  void FloatComponent::init(std::string id, std::string text, float default_, std::function<void (float value)> callback) {
+    this->id = id;
+    this->label = text;
+    this->value = default_;
+    this->callback = callback;
+  }
+
+  std::string FloatComponent::getType() {
+    return "Float";
+  }
+
+  CCTextInputNode *node;
+
+  void FloatComponent::imRender() {
+    if (!node) node = CCTextInputNode::create(0, 0, "a", "chatFont.fnt");
+    if (ImGui::InputFloat(label.c_str(), &value)) {
+      callback(value);
+    }
+  }
+  
+  FloatComponent *FloatComponent::create(std::string id, std::string text, float default_, std::function<void (float value)> callback) {
+    auto tog = new FloatComponent();
+    tog->init(id, text, default_, callback);
+    return tog;
+  }
+
+  FloatComponent *FloatComponent::setCallback(std::function<void (float value)> callback) {
+    this->callback = callback;
+    return this;
+  }
+
+  std::function<void (float value)> FloatComponent::getCallback() {
+    return callback;
+  }
+
+  float FloatComponent::getValue() {
+    return value;
+  }
+
+  FloatComponent *FloatComponent::setValue(float value) {
+    this->value = value;
+    return this;
+  }
+
+
   std::map<std::string, Component *> getComponents(std::string tab) {
     return tabs.at(tab);
   }
@@ -185,5 +239,6 @@ namespace summit::ui {
 
 $execute {
   summit::ui::registerTab("Global");
+  summit::ui::registerTab("Level");
   summit::ui::registerTab("Shortcuts");
 }

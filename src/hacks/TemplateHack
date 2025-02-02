@@ -1,22 +1,21 @@
 #include "../Hack.hpp"
 #include <ui/Widget.hpp>
+#include <utils/Config.hpp>
 
 namespace summit::hacks::global {
   class SafeMode : public Hack {
     public:
       void init() {
-        ui::Widget::create("TestWidget", 
-        ui::ToggleComponent::create("test", "Test label", false, [](bool toggled){
-          
-        }))
-        ->registerWidget("Global");
+        ui::ToggleComponent::create("test.testhack", "Test Hack", Config::get("test.testhack.test", false), [](bool toggled){
+          Config::set("test.testhack.test", toggled);
+        })->setTab("Test")->reg();
       }
 
       std::string getId() {
           return "testhack";
       }
       std::string getTab() {
-        return "Global";
+        return "Test";
       }
   };
 

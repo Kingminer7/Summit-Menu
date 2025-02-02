@@ -2,7 +2,7 @@
 #include <utils/Config.hpp>
 #include <ui/Widget.hpp>
 #include <utils/HookManager.hpp>
-#include <Geode/modify//PlayLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 
 namespace summit::hacks::global {
   class SafeMode : public Hack {

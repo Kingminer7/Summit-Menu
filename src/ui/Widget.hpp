@@ -73,30 +73,20 @@ namespace summit::ui {
 
   class FloatComponent : public Component {
     protected:
-      void init(std::string id, std::string text, std::function<void ()> callback);
-      std::function<void ()> callback;
+      void init(std::string id, std::string text, float default_, std::function<void (float value)> callback);
+      std::function<void (float value)> callback;
+      float value;
     public:
       FloatComponent *setTab(std::string tab);
-      ButtonComponent *setLabel(std::string label);
+      FloatComponent *setLabel(std::string label);
       void imRender() override;
       std::string getType() override;
-      ButtonComponent *setCallback(std::function<void ()> callback);
-      std::function<void ()> getCallback();
-      static ButtonComponent *create(std::string id, std::string text, std::function<void ()> callback);
+      FloatComponent *setCallback(std::function<void (float value)> callback);
+      std::function<void (float value)> getCallback();
+      FloatComponent *setValue(float value);
+      float getValue();
+      static FloatComponent *create(std::string id, std::string text, float default_, std::function<void (float value)> callback);
   };
-
-  // class FloatComponent : public Component {
-  //   protected:
-  //     void init();
-  //     std::function<void ()> callback;
-  //     float value = 0.f;
-  //   public:
-  //     FloatComponent *setLabel(std::string label);
-  //     FloatComponent *setCallback(std::function<void ()> callback);
-  //     std::function<void ()> getCallback();
-  //     void imRender() override;
-  // };
-
   std::map<std::string, Component *> getComponents(std::string tab);
   std::map<std::string, std::map<std::string, Component *>> getComponents();
   Component *getComponent(std::string id, std::string tab);
