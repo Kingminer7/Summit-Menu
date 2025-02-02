@@ -31,7 +31,7 @@ public:
     delete ret;
     return nullptr;
   }
-  void onExit() override;
+  void onClose(CCObject *sender) override;
 };
 
 class CocosUI : public Style {
@@ -69,8 +69,8 @@ public:
 
 CocosUI *CocosUI::instance = nullptr;
 
-void CocosUIPopup::onExit() {
-  Popup::onExit();
+void CocosUIPopup::onClose(CCObject *sender) {
+  Popup::onClose(sender);
   CocosUI::getInstance()->close();
 }
 } // namespace summit::ui::styles
