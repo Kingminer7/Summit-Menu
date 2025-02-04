@@ -39,6 +39,7 @@ public:
   static UIPopup *create();
   void onClose(cocos2d::CCObject * sender) override;
   void onTab(CCObject * tab);
+  void show() override;
 };
 
 }

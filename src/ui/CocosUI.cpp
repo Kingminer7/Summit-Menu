@@ -1,5 +1,6 @@
 #include "CocosUI.hpp"
 #include <ui/UIManager.hpp>
+#include "nodes/MenuBall.hpp"
 #include "nodes/CFMenuItem.hpp"
 
 using namespace geode::prelude;
@@ -59,6 +60,10 @@ CocosUI::UIPopup *CocosUI::UIPopup::create() {
 }
 
 bool CocosUI::UIPopup::setup() {
+  // 107 k
+  // 109 m
+  // 55  7
+  // + 1 to keep it as km7 :trolley:
   CCSize nodeSize = {80, 20};
   auto ws = CCDirector::get()->getWinSize();
   m_buttonMenu->setContentSize(ws);
@@ -85,7 +90,7 @@ bool CocosUI::UIPopup::setup() {
     bg->setContentSize(nodeSize * 2);
     bg->setScale(.5f);
     bg->setColor({0,0,0});
-    bg->setOpacity(127);
+    bg->setOpacity(75);
     y += nodeSize.height;
 
     auto lab = CCLabelBMFont::create(tab.c_str(), "bigFont.fnt");
@@ -147,5 +152,12 @@ void CocosUI::UIPopup::onTab(CCObject *sender)  {
 void CocosUI::UIPopup::onClose(CCObject *sender) {
   Popup::onClose(sender);
   CocosUI::getInstance()->close();
+  MenuBall::get()->setHandlingTouch(true);
+}
+
+void CocosUI::UIPopup::show() {
+  Popup::show();
+  setZOrder(10710955 + 1);
+  MenuBall::get()->setHandlingTouch(false);
 }
 }
