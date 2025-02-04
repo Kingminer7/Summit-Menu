@@ -49,7 +49,7 @@ void CocosUI::update() {}
 // popup
 CocosUI::UIPopup *CocosUI::UIPopup::create() {
   auto ret = new UIPopup();
-  if (ret->initAnchored(475.f, 270.f)) {
+  if (ret->initAnchored(475.f, 270.f, "GJ_square05.png")) {
     ret->autorelease();
     return ret;
   }
