@@ -25,7 +25,7 @@ public:
 
 class CocosUI::UIPopup : public geode::Popup<> {
 protected:
-  std::string currentTab;
+  std::string currentTab = "Global";
   geode::ScrollLayer *tabScroll;
   std::map<std::string, geode::ScrollLayer *> hackScrolls;
   bool setup() override;

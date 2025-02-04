@@ -87,15 +87,40 @@ bool CocosUI::UIPopup::setup() {
     bg->setColor({0,0,0});
     bg->setOpacity(127);
     y += nodeSize.height;
+
+    auto lab = CCLabelBMFont::create(tab.c_str(), "bigFont.fnt");
+    lab->limitLabelWidth(nodeSize.width - 5, .5f, .05f);
     
     auto btn = CFMenuItem::create(
         bg, this, menu_selector(CocosUI::UIPopup::onTab)
     );
+    btn->setID(tab);
+    btn->addChildAtPosition(lab, geode::Anchor::Center);
     btn->m_animationEnabled = false;
     btn->m_colorEnabled = true;
     btn->m_baseColor = {0,0,0};
-    btn->m_selectColor = {100,100,100};
+    btn->m_selectColor = {50,50,50};
     tabScrollMenu->addChild(btn);
+
+    auto hackScroll = ScrollLayer::create({370, 240});
+    hackScroll->setContentSize({370, 240});
+    hackScroll->ignoreAnchorPointForPosition(false);
+
+    CCMenu *hackScrollMenu = CCMenu::create();
+    hackScrollMenu->setContentSize({370, 240});
+    auto layout = AxisLayout::create(Axis::Row);
+    layout->setAxisAlignment(AxisAlignment::Start);
+    layout->setCrossAxisOverflow(true);
+    layout->setCrossAxisAlignment(AxisAlignment::End);
+    layout->setCrossAxisReverse(true);
+    hackScrollMenu->setLayout(layout);
+
+    hackScroll->m_contentLayer->addChildAtPosition(hackScrollMenu, Anchor::Center);
+    m_mainLayer->addChildAtPosition(hackScroll, Anchor::Left, {280, 0});
+    hackScroll->m_contentLayer->setOpacity(y);
+
+    hackScrolls[tab] = hackScroll;
+    if (currentTab != tab) hackScroll->setVisible(false);
   }
 
   tabScrollMenu->updateLayout();

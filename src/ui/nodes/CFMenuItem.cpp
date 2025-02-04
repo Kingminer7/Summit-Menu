@@ -25,7 +25,7 @@ CFMenuItem* CFMenuItem::create(cocos2d::CCNode* sprite, cocos2d::CCObject* targe
 void CFMenuItem::selected() {
   CCMenuItemSpriteExtra::selected();
   if (!m_colorEnabled || !m_pNormalImage) return;
-  if (cocos2d::CCSprite *sprite = geode::cast::typeinfo_cast<cocos2d::CCSprite *>(m_pNormalImage)) {
+  if (cocos2d::CCSprite *sprite = static_cast<cocos2d::CCSprite *>(m_pNormalImage)) {
     sprite->setColor(m_selectColor);
   }
 }
@@ -33,7 +33,7 @@ void CFMenuItem::selected() {
 void CFMenuItem::unselected() {
   CCMenuItemSpriteExtra::selected();
   if (!m_colorEnabled || !m_pNormalImage) return;
-  if (cocos2d::CCSprite *sprite = geode::cast::typeinfo_cast<cocos2d::CCSprite *>(m_pNormalImage)) {
+  if (cocos2d::CCSprite *sprite = static_cast<cocos2d::CCSprite *>(m_pNormalImage)) {
     sprite->setColor(m_baseColor);
   }
 }
