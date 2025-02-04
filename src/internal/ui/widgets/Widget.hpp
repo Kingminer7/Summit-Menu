@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Geode/Geode.hpp>
+
 namespace summit::ui::widgets {
 enum class WidgetSize {
   Half, // Half width, normal height

@@ -1,4 +1,10 @@
 #pragma once
+
+#include "Geode/cocos/cocoa/CCObject.h"
+#include "Geode/ui/Popup.hpp"
+#include "Geode/ui/ScrollLayer.hpp"
+#include <map>
+#include <string>
 #include <ui/styles/Style.hpp>
 
 namespace summit::ui::styles {
@@ -31,7 +37,7 @@ protected:
   bool setup() override;
 public:
   static UIPopup *create();
-  void onClose(CCObject * sender) override;
+  void onClose(cocos2d::CCObject * sender) override;
   void onTab(CCObject * tab);
 };
 

@@ -2,6 +2,7 @@
 
 #include "Widget.hpp"
 
+
 namespace summit::ui::widgets {
   class LabelWidget : public Widget {
     public:

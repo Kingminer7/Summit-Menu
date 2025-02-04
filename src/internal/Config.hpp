@@ -1,5 +1,8 @@
 #pragma once
 
+#include <matjson.hpp>
+#include <string>
+
 namespace summit {
 class Config {
 protected:
