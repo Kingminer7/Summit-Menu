@@ -1,5 +1,6 @@
 #include "CocosUI.hpp"
 #include <ui/UIManager.hpp>
+#include "nodes/CFMenuItem.hpp"
 
 using namespace geode::prelude;
 
@@ -58,33 +59,51 @@ CocosUI::UIPopup *CocosUI::UIPopup::create() {
 }
 
 bool CocosUI::UIPopup::setup() {
+  CCSize nodeSize = {80, 20};
   auto ws = CCDirector::get()->getWinSize();
   m_buttonMenu->setContentSize(ws);
+  m_buttonMenu->setPosition(ws / 2 - (m_mainLayer->getPosition() - m_mainLayer->getContentSize() / 2));
+  m_closeBtn->setPosition(m_closeBtn->getScaledContentWidth() / 2, ws.height - m_closeBtn->getScaledContentHeight() / 2);
 
-  tabScroll = ScrollLayer::create({60, 240});
-  tabScroll->setContentSize({60, 240});
+  tabScroll = ScrollLayer::create({nodeSize.width, 240});
+  tabScroll->setContentSize({nodeSize.width, 240});
   tabScroll->ignoreAnchorPointForPosition(false);
+
+  CCMenu *tabScrollMenu = CCMenu::create();
+  tabScrollMenu->setContentSize({nodeSize.width, 240});
   auto layout = AxisLayout::create(Axis::Column);
   layout->setAxisReverse(true);
   layout->setAxisAlignment(AxisAlignment::End);
-  tabScroll->m_contentLayer->setLayout(layout);
+  tabScrollMenu->setLayout(layout);
 
   float y = 0;
-  m_mainLayer->addChildAtPosition(tabScroll, Anchor::Left, {40, 0});
+  tabScroll->m_contentLayer->addChildAtPosition(tabScrollMenu, Anchor::Center);
+  m_mainLayer->addChildAtPosition(tabScroll, Anchor::Left, {nodeSize.width / 2 + 10, 0});
 
   for (std::string tab : UIManager::getTabs()) {
     auto bg = CCScale9Sprite::create("square02b_small.png");
-    bg->setContentSize({60, 20});
-    y += 20;
+    bg->setContentSize(nodeSize * 2);
+    bg->setScale(.5f);
+    bg->setColor({0,0,0});
+    bg->setOpacity(127);
+    y += nodeSize.height;
     
-    auto btn = CCMenuItemSpriteExtra::create(
+    auto btn = CFMenuItem::create(
         bg, this, menu_selector(CocosUI::UIPopup::onTab)
     );
-    tabScroll->m_contentLayer->addChild(btn);
-    tabScroll->m_contentLayer->updateLayout();
+    btn->m_animationEnabled = false;
+    btn->m_colorEnabled = true;
+    btn->m_baseColor = {0,0,0};
+    btn->m_selectColor = {100,100,100};
+    tabScrollMenu->addChild(btn);
   }
 
-  if (y > 240) tabScroll->m_contentLayer->setContentHeight(y);
+  tabScrollMenu->updateLayout();
+
+  if (y > 240) {
+    tabScroll->m_contentLayer->setContentHeight(y);
+    tabScrollMenu->setContentHeight(y);
+  }
   return true;
 }
 
