@@ -11,10 +11,6 @@ bool MenuBall::init() {
     return false;
   // scheduleUpdate();
   m_sprite = cocos2d::CCSprite::createWithSpriteFrameName("summitBtn.png"_spr);
-  if (!m_sprite) {
-    geode::log::error("Critical error - could not create menu ball sprite!");
-    return false;
-  }
   m_sprite->setScale(.4f);
   m_sprite->setID("sprite");
   addChild(m_sprite);
@@ -100,7 +96,6 @@ void MenuBall::ccTouchMoved(cocos2d::CCTouch *touch, cocos2d::CCEvent *evt) {
     if (ccpDistance(*m_startPos, touch->getLocation()) > 3)
       m_moving = true;
   if (m_moving) {
-    geode::log::info("{}", touch->getLocation());
     auto pos = touch->getLocation() + m_diff;
     pos.x = std::clamp(pos.x, -getContentWidth() / 2,
                        cocos2d::CCDirector::get()->getWinSize().width -

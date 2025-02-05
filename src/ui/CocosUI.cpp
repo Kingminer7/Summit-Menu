@@ -60,22 +60,25 @@ CocosUI::UIPopup *CocosUI::UIPopup::create() {
 }
 
 bool CocosUI::UIPopup::setup() {
-  // 107 k
-  // 109 m
-  // 55  7
-  // + 1 to keep it as km7 :trolley:
+  setID("cocos-ui"_spr);
+  m_mainLayer->setID("main-layer");
+  m_bgSprite->setID("popup-bg");
   CCSize nodeSize = {80, 20};
   auto ws = CCDirector::get()->getWinSize();
   m_buttonMenu->setContentSize(ws);
   m_buttonMenu->setPosition(ws / 2 - (m_mainLayer->getPosition() - m_mainLayer->getContentSize() / 2));
+  m_buttonMenu->setID("button-menu");
   m_closeBtn->setPosition(m_closeBtn->getScaledContentWidth() / 2, ws.height - m_closeBtn->getScaledContentHeight() / 2);
+  m_closeBtn->setID("close-button");
 
   tabScroll = ScrollLayer::create({nodeSize.width, 240});
+  tabScroll->setID("tab-buttons");
   tabScroll->setContentSize({nodeSize.width, 240});
   tabScroll->ignoreAnchorPointForPosition(false);
 
   CCMenu *tabScrollMenu = CCMenu::create();
   tabScrollMenu->setContentSize({nodeSize.width, 240});
+  tabScrollMenu->setID("tab-button-menu");
   auto layout = AxisLayout::create(Axis::Column);
   layout->setAxisReverse(true);
   layout->setAxisAlignment(AxisAlignment::End);
@@ -86,21 +89,23 @@ bool CocosUI::UIPopup::setup() {
   m_mainLayer->addChildAtPosition(tabScroll, Anchor::Left, {nodeSize.width / 2 + 10, 0});
 
   for (std::string tab : UIManager::getTabs()) {
-    auto bg = CCScale9Sprite::create("square02b_small.png");
-    bg->setContentSize(nodeSize * 2);
-    bg->setScale(.5f);
-    bg->setColor({0,0,0});
-    bg->setOpacity(75);
+    auto btnBg = CCScale9Sprite::create("square02b_001.png");
+    btnBg->setID("btn-bg");
+    btnBg->setScale(0.25f);
+    btnBg->setContentSize(nodeSize * 4);
+    btnBg->setColor({0,0,0});
+    btnBg->setOpacity(75);
     y += nodeSize.height;
 
-    auto lab = CCLabelBMFont::create(tab.c_str(), "bigFont.fnt");
-    lab->limitLabelWidth(nodeSize.width - 5, .5f, .05f);
+    auto btnLab = CCLabelBMFont::create(tab.c_str(), "bigFont.fnt");
+    btnLab->limitLabelWidth(nodeSize.width - 5, .5f, .05f);
+    btnLab->setID("btn-label");
     
     auto btn = CFMenuItem::create(
-        bg, this, menu_selector(CocosUI::UIPopup::onTab)
+        btnBg, this, menu_selector(CocosUI::UIPopup::onTab)
     );
     btn->setID(tab);
-    btn->addChildAtPosition(lab, geode::Anchor::Center);
+    btn->addChildAtPosition(btnLab, geode::Anchor::Center);
     btn->m_animationEnabled = false;
     btn->m_colorEnabled = true;
     btn->m_baseColor = {0,0,0};
@@ -110,8 +115,17 @@ bool CocosUI::UIPopup::setup() {
     auto hackScroll = ScrollLayer::create({370, 240});
     hackScroll->setContentSize({370, 240});
     hackScroll->ignoreAnchorPointForPosition(false);
+    hackScroll->setID("tab-" + tab);
+
+    auto scrollBg = CCScale9Sprite::create("square02b_001.png");
+    scrollBg->setID("scroll-bg");
+    scrollBg->setContentSize({370, 240});
+    scrollBg->setColor({0,0,0});
+    scrollBg->setOpacity(75);
+    hackScroll->addChildAtPosition(scrollBg, Anchor::Center);
 
     CCMenu *hackScrollMenu = CCMenu::create();
+    hackScrollMenu->setID("hack-scroll-menu");
     hackScrollMenu->setContentSize({370, 240});
     auto layout = AxisLayout::create(Axis::Row);
     layout->setAxisAlignment(AxisAlignment::Start);
@@ -122,7 +136,6 @@ bool CocosUI::UIPopup::setup() {
 
     hackScroll->m_contentLayer->addChildAtPosition(hackScrollMenu, Anchor::Center);
     m_mainLayer->addChildAtPosition(hackScroll, Anchor::Left, {280, 0});
-    hackScroll->m_contentLayer->setOpacity(y);
 
     hackScrolls[tab] = hackScroll;
     if (currentTab != tab) hackScroll->setVisible(false);
@@ -157,6 +170,10 @@ void CocosUI::UIPopup::onClose(CCObject *sender) {
 
 void CocosUI::UIPopup::show() {
   Popup::show();
+  // 107 k
+  // 109 m
+  // 55  7
+  // + 1 to keep it as km7 :trolley:
   setZOrder(10710955 + 1);
   MenuBall::get()->setHandlingTouch(false);
 }
