@@ -41,6 +41,8 @@ else()
     message(STATUS "Found Geode: $ENV{GEODE_SDK}")
 endif()
 
+# set(GEODE_DISABLE_PRECOMPILED_HEADERS ON)
+
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
 # no imgui for now

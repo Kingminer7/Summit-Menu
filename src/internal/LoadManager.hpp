@@ -1,5 +1,8 @@
 #pragma once
 
+#include <map>
+#include <functional>
+
 namespace summit {
 
 enum class LoadTime {

@@ -1,6 +1,6 @@
 #include "LoadManager.hpp"
-#include "Geode/loader/Event.hpp"
 #include "Geode/loader/GameEvent.hpp"
+#include <Geode/Geode.hpp>
 
 namespace summit {
 
