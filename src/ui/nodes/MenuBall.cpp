@@ -65,13 +65,14 @@ void MenuBall::registerWithTouchDispatcher() {
 bool MenuBall::ccTouchBegan(cocos2d::CCTouch *touch, cocos2d::CCEvent *evt) {
   if (!m_handleTouch || !m_render)
     return false;
-  m_diff = getPosition() - touch->getLocation();
-  m_startPos = new cocos2d::CCPoint(touch->getLocation());
   if (getScaledContentSize().width / 2 <
       ccpDistance(m_sprite->getPosition(),
                   convertToNodeSpace(touch->getLocation()))) {
     return false;
   }
+
+  m_diff = getPosition() - touch->getLocation();;
+  m_startPos = new cocos2d::CCPoint(touch->getLocation());
 
   m_moving = false;
 
