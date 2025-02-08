@@ -29,7 +29,7 @@ protected:
   }
   void registerWithTouchDispatcher() override;
 public:
-  static MenuBall *get();
+  static MenuBall *get(bool createIfNone = false);
   void onPress();
   // void update(float dt) override;
   std::function<void()> getCallback();

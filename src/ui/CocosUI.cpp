@@ -1,3 +1,5 @@
+#include <Geode/loader/Mod.hpp>
+
 #include "CocosUI.hpp"
 #include <ui/UIManager.hpp>
 #include "nodes/MenuBall.hpp"
@@ -21,8 +23,7 @@ void CocosUI::open() {
   if (m_open)
     return;
   m_open = true;
-  if (m_popup)
-    throw std::runtime_error("Popup already exists");
+  if (m_popup) m_popup->removeMeAndCleanup();
   m_popup = UIPopup::create();
   m_popup->show();
 }

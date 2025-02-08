@@ -24,10 +24,9 @@ bool MenuBall::init() {
   // 109 m
   // 55  7
   setZOrder(10710955);
-  auto x = 50.f; // summit::Config::get<float>("config.ball-x", 50.f);
-  auto y = 50.f; // summit::Config::get<float>("config.ball-y", 50.f);
-  // m_scale = summit::Config::set<float>("config.ball-scale", y);
-  m_scale = std::clamp(m_scale, 0.25f, 3.f);
+  auto x = summit::Config::get<float>("config.ball-x", 50.f);
+  auto y = summit::Config::get<float>("config.ball-y", 50.f);
+  m_scale = std::clamp(summit::Config::get<float>("config.ball-scale", 1.f), 0.25f, 3.f);
   x = std::clamp(x, -getContentWidth() / 2,
                  cocos2d::CCDirector::get()->getWinSize().width -
                      getContentWidth() / 2);
@@ -36,14 +35,19 @@ bool MenuBall::init() {
                      getContentHeight() / 2);
   setPosition({x, y});
 
+  summit::Config::set<float>("config.ball-x", x);
+  summit::Config::set<float>("config.ball-y", y);
+  summit::Config::set<float>("config.ball-scale", m_scale);
+
   setID("summit-button"_spr);
 
   return true;
 };
 
-MenuBall *MenuBall::get() {
+MenuBall *MenuBall::get(bool createIfNone) {
   if (m_instance)
     return m_instance;
+  if (!createIfNone) return nullptr;
   m_instance = new MenuBall();
   if (m_instance && m_instance->init()) {
     m_instance->autorelease();
@@ -55,7 +59,7 @@ MenuBall *MenuBall::get() {
 }
 
 void MenuBall::registerWithTouchDispatcher() {
-  cocos2d::CCTouchDispatcher::get()->addTargetedDelegate(this, -9999999, true);
+  cocos2d::CCTouchDispatcher::get()->addTargetedDelegate(this, -10710955, true);
 }
 
 bool MenuBall::ccTouchBegan(cocos2d::CCTouch *touch, cocos2d::CCEvent *evt) {
@@ -82,8 +86,11 @@ void MenuBall::ccTouchEnded(cocos2d::CCTouch *touch, cocos2d::CCEvent *evt) {
   stopAllActions();
   runAction(cocos2d::CCEaseSineOut::create(
       cocos2d::CCScaleTo::create(0.3f, m_scale)));
-  if (m_moving)
+  if (m_moving) {
+    summit::Config::set<float>("config.ball-x", getPositionX());
+    summit::Config::set<float>("config.ball-y", getPositionY());
     return;
+  }
   if (!m_callback) {
     geode::log::error("Missing callback for menu ball!");
     return;
@@ -104,8 +111,6 @@ void MenuBall::ccTouchMoved(cocos2d::CCTouch *touch, cocos2d::CCEvent *evt) {
                        cocos2d::CCDirector::get()->getWinSize().height -
                            getContentHeight() / 2);
     setPosition(pos);
-    // summit::Config::set<float>("ballPosX", pos.x);
-    // summit::Config::set<float>("ballPosY", pos.y);
   }
 }
 
@@ -137,7 +142,9 @@ void MenuBall::setHandlingTouch(bool handle) { m_handleTouch = handle; }
 
 $execute {
   summit::LoadManager::onLoad([](){
-  MenuBall::get()->setCallback([]() {
+  auto ball = MenuBall::get(true);
+  if(!ball) return;
+  ball->setCallback([]() {
     summit::ui::styles::CocosUI::getInstance()->toggle();
   });
   }, 0, summit::LoadTime::MenuLayer);
