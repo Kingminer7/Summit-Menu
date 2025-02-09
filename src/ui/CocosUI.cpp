@@ -146,30 +146,24 @@ bool CocosUI::UIPopup::setup() {
     hackScrolls[tab] = hackScroll;
     if (currentTab != tab) hackScroll->setVisible(false);
 
-    bool left = false;
+    bool left = true;
 
     auto widgets = UIManager::getWidgets(tab);
     for (std::string id : UIManager::getInsertionOrder(tab)) {
       auto widget = widgets[id];
       if (!widget) continue;
-      if (!left && (pair.second->getSize() == widgets::WidgetSize::Full || pair.second->getSize() == widgets::WidgetSize::FullDouble)) {
+      if (!left && (widget->getSize() == widgets::WidgetSize::Full || widget->getSize() == widgets::WidgetSize::FullDouble)) {
         log::info("double - {}", pair.second->getId());
-        
+        cache.push_back(id)
         continue;
-      } else if (!cache.empty()) {
-        for (auto& pair2 : cache) {
-          auto node2 = pair2.second->createCocosNode();
-          if (!node2) continue;
-          hackScroll->m_contentLayer->addChild(node2);
-          node2->setID(pair2.first);
+      } else if (!left && !cache.empty()) {
+        for (std::string id2 : cache) {
+          addNode(hackScroll, id2, widgets[id]);
         }
         cache = {};
       }
       left = !left;
-      auto node = pair.second->createCocosNode();
-      if (!node) continue;
-      hackScroll->m_contentLayer->addChild(node);
-      node->setID(pair.first);
+      addNode(hackScroll, id, widget);
     }
 
     for (auto& pair : cache) {
