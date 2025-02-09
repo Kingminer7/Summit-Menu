@@ -54,7 +54,7 @@ $execute {
   LoadManager::onLoad([](){
     UIManager::registerTab("Global");
     UIManager::registerTab("Player");
-    #ifdef DEBUG_BUILD
+    // #ifdef DEBUG_BUILD
     UIManager::registerTab("Debug");
     {
       auto w = widgets::LabelWidget::create("debug.label-half", "Test Half Label")->setSize(widgets::WidgetSize::Half);
@@ -72,7 +72,7 @@ $execute {
       auto w = widgets::LabelWidget::create("debug.label-doublehalf", "Test Double Half Label")->setSize(widgets::WidgetSize::HalfDouble);
       UIManager::registerWidget("Debug", w);
     }
-    #endif
+    // #endif
     UIManager::registerTab("Config");
   },0,LoadTime::Early);
 }
