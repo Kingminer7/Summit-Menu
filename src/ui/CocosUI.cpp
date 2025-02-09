@@ -4,6 +4,7 @@
 #include <ui/UIManager.hpp>
 #include "nodes/MenuBall.hpp"
 #include "nodes/CFMenuItem.hpp"
+#include "ui/widgets/Widget.hpp"
 
 using namespace geode::prelude;
 
@@ -60,6 +61,13 @@ CocosUI::UIPopup *CocosUI::UIPopup::create() {
   return nullptr;
 }
 
+void addNode(ScrollLayer *layer, std::string id, widgets::Widget *widget) {
+  auto node = widget->createCocosNode();
+  if (!node) return;
+  layer->m_contentLayer->addChild(node);
+  node->setID(id);
+}
+
 bool CocosUI::UIPopup::setup() {
   setID("cocos-ui"_spr);
   m_mainLayer->setID("main-layer");
@@ -73,7 +81,7 @@ bool CocosUI::UIPopup::setup() {
   m_closeBtn->setID("close-button");
 
   tabScroll = ScrollLayer::create({nodeSize.width, 240});
-  tabScroll->setID("tab-buttons");
+  tabScroll->setID("buttons");
   tabScroll->setContentSize({nodeSize.width, 240});
   tabScroll->ignoreAnchorPointForPosition(false);
 
@@ -125,21 +133,55 @@ bool CocosUI::UIPopup::setup() {
     scrollBg->setOpacity(75);
     hackScroll->addChildAtPosition(scrollBg, Anchor::Center);
 
-    CCMenu *hackScrollMenu = CCMenu::create();
-    hackScrollMenu->setID("hack-scroll-menu");
-    hackScrollMenu->setContentSize({370, 240});
-    auto layout = AxisLayout::create(Axis::Row);
-    layout->setAxisAlignment(AxisAlignment::Start);
+    auto layout = AxisLayout::create(Axis::Column);
+    layout->setAxisAlignment(AxisAlignment::End);
     layout->setCrossAxisOverflow(true);
     layout->setCrossAxisAlignment(AxisAlignment::End);
     layout->setCrossAxisReverse(true);
-    hackScrollMenu->setLayout(layout);
+    layout->setGrowCrossAxis(true);
+    hackScroll->m_contentLayer->setLayout(layout);
 
-    hackScroll->m_contentLayer->addChildAtPosition(hackScrollMenu, Anchor::Center);
     m_mainLayer->addChildAtPosition(hackScroll, Anchor::Left, {280, 0});
 
     hackScrolls[tab] = hackScroll;
     if (currentTab != tab) hackScroll->setVisible(false);
+
+    bool left = false;
+
+    auto widgets = UIManager::getWidgets(tab);
+    for (std::string id : UIManager::getInsertionOrder(tab)) {
+      auto widget = widgets[id];
+      if (!widget) continue;
+      if (!left && (pair.second->getSize() == widgets::WidgetSize::Full || pair.second->getSize() == widgets::WidgetSize::FullDouble)) {
+        log::info("double - {}", pair.second->getId());
+        
+        continue;
+      } else if (!cache.empty()) {
+        for (auto& pair2 : cache) {
+          auto node2 = pair2.second->createCocosNode();
+          if (!node2) continue;
+          hackScroll->m_contentLayer->addChild(node2);
+          node2->setID(pair2.first);
+        }
+        cache = {};
+      }
+      left = !left;
+      auto node = pair.second->createCocosNode();
+      if (!node) continue;
+      hackScroll->m_contentLayer->addChild(node);
+      node->setID(pair.first);
+    }
+
+    for (auto& pair : cache) {
+      left = !left;
+      auto node = pair.second->createCocosNode();
+      log::info("{}", node == nullptr);
+      if (!node) continue;
+      hackScroll->m_contentLayer->addChild(node);
+      node->setID(pair.first);
+    }
+
+    hackScroll->m_contentLayer->updateLayout();
   }
 
   tabScrollMenu->updateLayout();
