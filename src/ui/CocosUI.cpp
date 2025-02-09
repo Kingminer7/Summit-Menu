@@ -159,7 +159,7 @@ bool CocosUI::UIPopup::setup() {
         continue;
       } else if (!left && !cache.empty()) {
         for (std::string id2 : cache) {
-          addNode(hackScroll, id2, widgets[id]);
+          addNode(hackScroll, id2, widgets[id2]);
         }
         cache = {};
       }
@@ -167,8 +167,8 @@ bool CocosUI::UIPopup::setup() {
       addNode(hackScroll, id, widget);
     }
 
-    for (std::string id2 : cache) {
-      addNode(hackScroll, id2, widgets[id]);
+    for (std::string id : cache) {
+      addNode(hackScroll, id, widgets[id]);
     }
     cache = {};
 
