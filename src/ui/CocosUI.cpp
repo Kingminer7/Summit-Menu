@@ -167,14 +167,10 @@ bool CocosUI::UIPopup::setup() {
       addNode(hackScroll, id, widget);
     }
 
-    for (auto& pair : cache) {
-      left = !left;
-      auto node = pair.second->createCocosNode();
-      log::info("{}", node == nullptr);
-      if (!node) continue;
-      hackScroll->m_contentLayer->addChild(node);
-      node->setID(pair.first);
+    for (std::string id2 : cache) {
+      addNode(hackScroll, id2, widgets[id]);
     }
+    cache = {};
 
     hackScroll->m_contentLayer->updateLayout();
   }
