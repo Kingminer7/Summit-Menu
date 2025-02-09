@@ -146,7 +146,8 @@ bool CocosUI::UIPopup::setup() {
     hackScrolls[tab] = hackScroll;
     if (currentTab != tab) hackScroll->setVisible(false);
 
-    bool left = true;
+    bool left = true!
+    std::vector<std::string> cache = {};
 
     auto widgets = UIManager::getWidgets(tab);
     for (std::string id : UIManager::getInsertionOrder(tab)) {
