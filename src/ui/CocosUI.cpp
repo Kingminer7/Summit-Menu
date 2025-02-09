@@ -146,7 +146,7 @@ bool CocosUI::UIPopup::setup() {
     hackScrolls[tab] = hackScroll;
     if (currentTab != tab) hackScroll->setVisible(false);
 
-    bool left = true!
+    bool left = true;
     std::vector<std::string> cache = {};
 
     auto widgets = UIManager::getWidgets(tab);
@@ -154,8 +154,8 @@ bool CocosUI::UIPopup::setup() {
       auto widget = widgets[id];
       if (!widget) continue;
       if (!left && (widget->getSize() == widgets::WidgetSize::Full || widget->getSize() == widgets::WidgetSize::FullDouble)) {
-        log::info("double - {}", pair.second->getId());
-        cache.push_back(id)
+        log::info("double - {}", widget->getId());
+        cache.push_back(id);
         continue;
       } else if (!left && !cache.empty()) {
         for (std::string id2 : cache) {
