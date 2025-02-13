@@ -6,6 +6,58 @@
 
 MenuBall *MenuBall::m_instance = nullptr;
 
+// this dang class doesnt exist on ios
+// Yes i just copied from cocos source code
+
+class CCEaseSineOut : public cocos2d::CCActionEase {
+  public:
+    static CCEaseSineOut* create(cocos2d::CCActionInterval* pAction) {
+        CCEaseSineOut *pRet = new CCEaseSineOut();
+        if (pRet)
+        {
+            if (pRet->initWithAction(pAction))
+            {
+                pRet->autorelease();
+            }
+            else
+            {
+                CC_SAFE_RELEASE_NULL(pRet);
+            }
+        }
+
+        return pRet; 
+    }
+
+    // CCEaseSineOut(CCEaseSineOut const&);
+    // CCEaseSineOut();
+
+    // I can't use flippin CCZone constructor because codegen does not work with args in constructors
+    virtual cocos2d::CCObject* copyWithZone(cocos2d::CCZone* pZone) {
+        // CCZone* pNewZone = NULL;
+        CCEaseSineOut* pCopy = NULL;
+        if(pZone && pZone->m_pCopyObject)
+        {
+            //in case of being called at sub class
+            pCopy = (CCEaseSineOut*)(pZone->m_pCopyObject);
+        }
+        else
+        {
+            pCopy = new CCEaseSineOut();
+            // pNewZone = new CCZone(pCopy);
+        }
+        pCopy->initWithAction((CCActionInterval *)(m_pInner->copy()->autorelease()));
+        
+        // CC_SAFE_DELETE(pNewZone);
+        return pCopy;
+    }
+    virtual void update(float time) {
+        m_pInner->update(sinf(time * (float)M_PI_2));
+    }
+    virtual cocos2d::CCActionInterval* reverse() {
+        return cocos2d::CCEaseSineIn::create(m_pInner->reverse());
+    }
+};
+
 bool MenuBall::init() {
   if (!CCMenu::init())
     return false;
@@ -77,14 +129,14 @@ bool MenuBall::ccTouchBegan(cocos2d::CCTouch *touch, cocos2d::CCEvent *evt) {
   m_moving = false;
 
   stopAllActions();
-  runAction(cocos2d::CCEaseSineOut::create(
+  runAction(CCEaseSineOut::create(
       cocos2d::CCScaleTo::create(0.3f, m_scale * m_multiplier)));
   return true;
 }
 
 void MenuBall::ccTouchEnded(cocos2d::CCTouch *touch, cocos2d::CCEvent *evt) {
   stopAllActions();
-  runAction(cocos2d::CCEaseSineOut::create(
+  runAction(CCEaseSineOut::create(
       cocos2d::CCScaleTo::create(0.3f, m_scale)));
   if (m_moving) {
     summit::Config::set<float>("config.ball-x", getPositionX());
