@@ -184,12 +184,12 @@ bool CocosUI::UIPopup::setup() {
       hackScroll->m_contentLayer->setContentHeight(hackScroll->getContentHeight());
     }
 
-    for (auto child : tabScroll->m_contentLayer->getChildren()) {
-      child->setPositionY(tabScroll->m_contentLayer->getHeight() - child->getPositionY());
-		}
+    for (auto child : CCArrayExt(tabScroll->m_contentLayer->getChildren())) {
+      child->setPositionY(tabScroll->m_contentLayer->getContentHeight() - child->getPositionY());
+    }
   }
 	
-  tabScrollMenu->scrollToTop();
+  tabScroll->scrollToTop();
 
   if (y > 240) {
     tabScroll->m_contentLayer->setContentHeight(y);
