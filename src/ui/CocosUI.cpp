@@ -124,6 +124,7 @@ bool CocosUI::UIPopup::setup() {
     scrollBg->setContentSize({370, 240});
     scrollBg->setColor({0,0,0});
     scrollBg->setOpacity(75);
+    scrollBg->setZOrder(-5);
     hackScroll->addChildAtPosition(scrollBg, Anchor::Center);
 
     m_mainLayer->addChildAtPosition(hackScroll, Anchor::Left, {280, 0});
@@ -182,9 +183,13 @@ bool CocosUI::UIPopup::setup() {
     if (hackScroll->getContentHeight() > hackScroll->m_contentLayer->getContentHeight()) {
       hackScroll->m_contentLayer->setContentHeight(hackScroll->getContentHeight());
     }
-  }
 
-  tabScrollMenu->updateLayout();
+    for (auto child : tabScroll->m_contentLayer->getChildren()) {
+      child->setPositionY(tabScroll->m_contentLayer->getHeight() - child->getPositionY());
+		}
+  }
+	
+  tabScrollMenu->scrollToTop();
 
   if (y > 240) {
     tabScroll->m_contentLayer->setContentHeight(y);
