@@ -86,7 +86,7 @@ bool CocosUI::UIPopup::setup() {
   layout->setAxisAlignment(AxisAlignment::End);
   tabScrollMenu->setLayout(layout);
 
-  float y = 0;
+  float y = -30;
   tabScroll->m_contentLayer->addChildAtPosition(tabScrollMenu, Anchor::Center);
   m_mainLayer->addChildAtPosition(tabScroll, Anchor::Left, {nodeSize.width / 2 + 10, 0});
 
@@ -136,7 +136,7 @@ bool CocosUI::UIPopup::setup() {
     std::vector<std::string> cache = {};
 
     auto widgets = UIManager::getWidgets(tab);
-    float y = -30;
+    float y = 0;
     for (std::string id : UIManager::getInsertionOrder(tab)) {
       log::info("{}", id);
       auto widget = widgets[id];
@@ -158,13 +158,13 @@ bool CocosUI::UIPopup::setup() {
         }
         cache = {};
       }
-      left = !left;
+      if (widget->getSize() == widgets::WidgetSize::Half || !left) left = !left;
       auto node = widget->createCocosNode();
       if (!node) continue;
       auto cl = hackScroll->m_contentLayer;
       cl->addChild(node);
       node->setID(id);
-      if (!left) y += node->getContentHeight();
+      if (!left || widget->getSize() == widgets::WidgetSize::Full) y += node->getContentHeight();
       node->setPosition({left ? node->getContentWidth() : 0.f, y});
     }
 
@@ -184,11 +184,12 @@ bool CocosUI::UIPopup::setup() {
       hackScroll->m_contentLayer->setContentHeight(hackScroll->getContentHeight());
     }
 
-    for (auto child : CCArrayExt<CCNode *>(tabScroll->m_contentLayer->getChildren())) {
-      child->setPositionY(tabScroll->m_contentLayer->getContentHeight() - child->getPositionY());
+    for (auto child : CCArrayExt<CCNode *>(hackScroll->m_contentLayer->getChildren())) {
+      child->setPositionY(hackScroll->m_contentLayer->getContentHeight() - child->getPositionY());
     }
   }
 	
+  tabScrollMenu->updateLayout();
   tabScroll->scrollToTop();
 
   if (y > 240) {

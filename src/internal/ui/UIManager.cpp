@@ -68,11 +68,15 @@ $execute {
       UIManager::registerWidget("Debug", w);
     }
     {
-      auto w = widgets::LabelWidget::create("debug.label-half3", "Test Half Label")->setSize(widgets::WidgetSize::Half);
+      auto w = widgets::LabelWidget::create("debug.label-full", "Test Full Label")->setSize(widgets::WidgetSize::Full);
       UIManager::registerWidget("Debug", w);
     }
     {
-      auto w = widgets::LabelWidget::create("debug.label-full", "Test Full Label")->setSize(widgets::WidgetSize::Full);
+      auto w = widgets::LabelWidget::create("debug.label-half3", "Really Long Half Label Testing")->setSize(widgets::WidgetSize::Half);
+      UIManager::registerWidget("Debug", w);
+    }
+    {
+      auto w = widgets::LabelWidget::create("debug.label-full2", "Really Long Full Label Testing Extend Extend Ok Thanks")->setSize(widgets::WidgetSize::Full);
       UIManager::registerWidget("Debug", w);
     }
     // #endif
