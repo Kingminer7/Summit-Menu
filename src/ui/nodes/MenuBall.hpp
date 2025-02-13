@@ -2,6 +2,7 @@
 #include "Geode/cocos/menu_nodes/CCMenu.h"
 #include "Geode/cocos/touch_dispatcher/CCTouch.h"
 #include <functional>
+
 class MenuBall : public cocos2d::CCMenu {
 protected:
   static MenuBall *m_instance;

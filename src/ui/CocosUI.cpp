@@ -61,13 +61,6 @@ CocosUI::UIPopup *CocosUI::UIPopup::create() {
   return nullptr;
 }
 
-void addNode(ScrollLayer *layer, std::string id, widgets::Widget *widget) {
-  auto node = widget->createCocosNode();
-  if (!node) return;
-  layer->m_contentLayer->addChild(node);
-  node->setID(id);
-}
-
 bool CocosUI::UIPopup::setup() {
   setID("cocos-ui"_spr);
   m_mainLayer->setID("main-layer");
@@ -133,14 +126,6 @@ bool CocosUI::UIPopup::setup() {
     scrollBg->setOpacity(75);
     hackScroll->addChildAtPosition(scrollBg, Anchor::Center);
 
-    auto layout = AxisLayout::create(Axis::Column);
-    layout->setAxisAlignment(AxisAlignment::End);
-    layout->setCrossAxisOverflow(true);
-    layout->setCrossAxisAlignment(AxisAlignment::End);
-    layout->setCrossAxisReverse(true);
-    layout->setGrowCrossAxis(true);
-    hackScroll->m_contentLayer->setLayout(layout);
-
     m_mainLayer->addChildAtPosition(hackScroll, Anchor::Left, {280, 0});
 
     hackScrolls[tab] = hackScroll;
@@ -150,29 +135,53 @@ bool CocosUI::UIPopup::setup() {
     std::vector<std::string> cache = {};
 
     auto widgets = UIManager::getWidgets(tab);
+    float y = -30;
     for (std::string id : UIManager::getInsertionOrder(tab)) {
+      log::info("{}", id);
       auto widget = widgets[id];
       if (!widget) continue;
-      if (!left && (widget->getSize() == widgets::WidgetSize::Full || widget->getSize() == widgets::WidgetSize::FullDouble)) {
-        log::info("double - {}", widget->getId());
+      if (!left && widget->getSize() == widgets::WidgetSize::Full) { // || widget->getSize() == widgets::WidgetSize::FullDouble
         cache.push_back(id);
         continue;
-      } else if (!left && !cache.empty()) {
+      } else if (left && !cache.empty()) {
         for (std::string id2 : cache) {
-          addNode(hackScroll, id2, widgets[id2]);
+          auto widget2 = widgets[id2];
+          if (!widget2) continue;
+          auto node = widget2->createCocosNode();
+          if (!node) continue;
+          auto cl = hackScroll->m_contentLayer;
+          cl->addChild(node);
+          y += node->getContentHeight();
+          node->setPosition({0, y});
+          node->setID(id);
         }
         cache = {};
       }
       left = !left;
-      addNode(hackScroll, id, widget);
+      auto node = widget->createCocosNode();
+      if (!node) continue;
+      auto cl = hackScroll->m_contentLayer;
+      cl->addChild(node);
+      node->setID(id);
+      if (!left) y += node->getContentHeight();
+      node->setPosition({left ? node->getContentWidth() : 0.f, y});
     }
 
     for (std::string id : cache) {
-      addNode(hackScroll, id, widgets[id]);
+      auto widget = widgets[id];
+      if (!widget) continue;
+      auto node = widget->createCocosNode();
+      if (!node) continue;
+      auto cl = hackScroll->m_contentLayer;
+      cl->addChild(node);
+      y += node->getContentHeight();
+      node->setPosition({0, y});
+      node->setID(id);
     }
-    cache = {};
 
-    hackScroll->m_contentLayer->updateLayout();
+    if (hackScroll->getContentHeight() > hackScroll->m_contentLayer->getContentHeight()) {
+      hackScroll->m_contentLayer->setContentHeight(hackScroll->getContentHeight());
+    }
   }
 
   tabScrollMenu->updateLayout();

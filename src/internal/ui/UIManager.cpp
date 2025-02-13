@@ -12,10 +12,11 @@ bool UIManager::registerTab(std::string tab) {
   if (std::find(m_tabs.begin(), m_tabs.end(), tab) != m_tabs.end()) {
     return false;
   }
-  if (m_widgets.contains(tab)) {
+  if (m_widgets.contains(tab) || m_insertions.contains(tab)) {
     return false;
   }
   m_widgets[tab] = {};
+  m_insertions[tab] = {};
   m_tabs.push_back(tab);
   return true;
 }
@@ -33,20 +34,22 @@ std::map<std::string, widgets::Widget *> UIManager::getWidgets() {
   return all;
 }
 
-std::vector<std::string> UIManager::getInsertionOrder(std::string tab) {
+std::vector<std::string> UIManager::getInsertionOrder(std::string tab) {\
   return m_insertions[tab];
 }
 
 bool UIManager::registerWidget(std::string tab, widgets::Widget *widget) {
-  if (m_widgets.find(tab) == m_widgets.end()) {
+  if (!m_widgets.contains(tab) || !m_insertions.contains(tab)) {
     return false;
   }
   auto &wmap = m_widgets[tab];
+  auto &wvec = m_insertions[tab];
   auto id = widget->getId();
-  if (wmap.find(id) != wmap.end()) { 
+  if (wmap.contains(id) || std::find(wvec.begin(), wvec.end(), id) != wvec.end()) { 
     return false;
   }
   wmap[id] = widget;
+  wvec.push_back(id);
   return true;
 }
 
@@ -61,15 +64,15 @@ $execute {
       UIManager::registerWidget("Debug", w);
     }
     {
+      auto w = widgets::LabelWidget::create("debug.label-half2", "Test Half Label")->setSize(widgets::WidgetSize::Half);
+      UIManager::registerWidget("Debug", w);
+    }
+    {
+      auto w = widgets::LabelWidget::create("debug.label-half3", "Test Half Label")->setSize(widgets::WidgetSize::Half);
+      UIManager::registerWidget("Debug", w);
+    }
+    {
       auto w = widgets::LabelWidget::create("debug.label-full", "Test Full Label")->setSize(widgets::WidgetSize::Full);
-      UIManager::registerWidget("Debug", w);
-    }
-    {
-      auto w = widgets::LabelWidget::create("debug.label-doublefull", "Test Double Full Label")->setSize(widgets::WidgetSize::FullDouble);
-      UIManager::registerWidget("Debug", w);
-    }
-    {
-      auto w = widgets::LabelWidget::create("debug.label-doublehalf", "Test Double Half Label")->setSize(widgets::WidgetSize::HalfDouble);
       UIManager::registerWidget("Debug", w);
     }
     // #endif

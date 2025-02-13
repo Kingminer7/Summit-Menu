@@ -6,8 +6,9 @@ namespace summit::ui::widgets {
 enum class WidgetSize {
   Half, // Half width, normal height
   Full, // Full width, normal height
-  HalfDouble, // Half width, double height
-  FullDouble, // Full width, double height
+  // womp womp
+  // HalfDouble, // Half width, double height
+  // FullDouble, // Full width, double height
 };
 cocos2d::CCSize getCCSize(WidgetSize size);
 
