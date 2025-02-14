@@ -85,9 +85,6 @@ bool CocosUI::UIPopup::setup() {
   layout->setAxisReverse(true);
   layout->setAxisAlignment(AxisAlignment::End);
   tabScrollMenu->setLayout(layout);
-
-  float y = -30;
-  tabScroll->m_contentLayer->addChildAtPosition(tabScrollMenu, Anchor::Center);
   m_mainLayer->addChildAtPosition(tabScroll, Anchor::Left, {nodeSize.width / 2 + 10, 0});
 
   for (std::string tab : UIManager::getTabs()) {
@@ -97,7 +94,6 @@ bool CocosUI::UIPopup::setup() {
     btnBg->setContentSize(nodeSize * 4);
     btnBg->setColor({0,0,0});
     btnBg->setOpacity(75);
-    y += nodeSize.height;
 
     auto btnLab = CCLabelBMFont::create(tab.c_str(), "bigFont.fnt");
     btnLab->limitLabelWidth(nodeSize.width - 5, .5f, .05f);
@@ -165,7 +161,7 @@ bool CocosUI::UIPopup::setup() {
       cl->addChild(node);
       node->setID(id);
       if (!left || widget->getSize() == widgets::WidgetSize::Full) y += node->getContentHeight();
-      node->setPosition({left ? node->getContentWidth() : 0.f, y});
+      node->setPosition({left && widget->getSize() == widgets::WidgetSize::Half ? node->getContentWidth() : 0.f, y});
     }
 
     for (std::string id : cache) {
@@ -180,22 +176,26 @@ bool CocosUI::UIPopup::setup() {
       node->setID(id);
     }
 
-    if (hackScroll->getContentHeight() > hackScroll->m_contentLayer->getContentHeight()) {
-      hackScroll->m_contentLayer->setContentHeight(hackScroll->getContentHeight());
+    if (y < hackScroll->m_contentLayer->getContentHeight()) {
+      y = hackScroll->getContentHeight();
     }
+    hackScroll->m_contentLayer->setContentHeight(y);
+    hackScroll->scrollToTop();
 
     for (auto child : CCArrayExt<CCNode *>(hackScroll->m_contentLayer->getChildren())) {
       child->setPositionY(hackScroll->m_contentLayer->getContentHeight() - child->getPositionY());
     }
   }
-	
+
+  auto h = (nodeSize.height + 5) * UIManager::getTabs().size() - 5;
+  if (h > tabScroll->getContentHeight()) {
+    tabScroll->m_contentLayer->setContentHeight(h);
+    tabScrollMenu->setContentHeight(h);
+  }
+  tabScroll->m_contentLayer->addChildAtPosition(tabScrollMenu, Anchor::Center);
   tabScrollMenu->updateLayout();
   tabScroll->scrollToTop();
 
-  if (y > 240) {
-    tabScroll->m_contentLayer->setContentHeight(y);
-    tabScrollMenu->setContentHeight(y);
-  }
   return true;
 }
 

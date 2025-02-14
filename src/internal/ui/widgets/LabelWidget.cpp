@@ -34,23 +34,18 @@ namespace summit::ui::widgets {
     auto node = CCNode::create();
     node->setContentSize(csize);
     node->setID(fmt::format("{}-{}", getType(), getId()));
-
-    auto bg = extension::CCScale9Sprite::create("GJ_square05.png");
-    bg->setContentSize(csize);
-    node->addChildAtPosition(bg, geode::Anchor::Center);
     
-    auto lab = CCLabelBMFont::create(label.c_str(), "chatFont.fnt");
-    auto lWidth = csize.width - 5.f;
+    auto lab = CCLabelBMFont::create(label.c_str(), "bigFont.fnt");
+    lab->setAnchorPoint(align);
+    auto lWidth = csize.width - 10.f;
     if (!desc.empty()) {
       lWidth -= 15.f;
     }
     if (!subWidgets.empty()) {
       lWidth -= 20.f;
     }
-    lab->limitLabelWidth(lWidth,2.f, .1f);
-    lab->setContentSize({lWidth, csize.height - 5.f});
-    node->addChildAtPosition(lab, geode::Anchor::Left, {5.f, 0.f});
-    lab->setAnchorPoint({0.f, .5f});
+    lab->limitLabelWidth(lWidth,.5f, .05f);
+    node->addChildAtPosition(lab, geode::Anchor::Left, {5.f + lWidth * (align.x), 0.f});
 
     return node;
   }
@@ -68,5 +63,14 @@ namespace summit::ui::widgets {
     auto widget = new LabelWidget;
     widget->init(id, label);
     return widget;
+  }
+
+  LabelWidget *LabelWidget::setAlignment(CCPoint align) {
+    this->align = align;
+    return this;
+  }
+
+  CCPoint LabelWidget::getAlignment() {
+    return this->align;
   }
 }

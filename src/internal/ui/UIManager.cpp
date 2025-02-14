@@ -1,6 +1,7 @@
 #include "UIManager.hpp"
 #include "LoadManager.hpp"
 #include "ui/widgets/LabelWidget.hpp"
+#include "ui/widgets/ToggleWidget.hpp"
 #include "ui/widgets/Widget.hpp"
 
 namespace summit::ui {
@@ -64,7 +65,7 @@ $execute {
       UIManager::registerWidget("Debug", w);
     }
     {
-      auto w = widgets::LabelWidget::create("debug.label-half2", "Test Half Label")->setSize(widgets::WidgetSize::Half);
+      auto w = widgets::LabelWidget::create("debug.label-half2", "Test Align Label")->setSize(widgets::WidgetSize::Half)->setAlignment({.5f, .5f});
       UIManager::registerWidget("Debug", w);
     }
     {
@@ -72,11 +73,39 @@ $execute {
       UIManager::registerWidget("Debug", w);
     }
     {
+      auto w = widgets::LabelWidget::create("debug.label-full2", "Test Full Align Label")->setSize(widgets::WidgetSize::Full)->setAlignment({.5f, .5f});
+      UIManager::registerWidget("Debug", w);
+    }
+    {
       auto w = widgets::LabelWidget::create("debug.label-half3", "Really Long Half Label Testing")->setSize(widgets::WidgetSize::Half);
       UIManager::registerWidget("Debug", w);
     }
     {
-      auto w = widgets::LabelWidget::create("debug.label-full2", "Really Long Full Label Testing Extend Extend Ok Thanks")->setSize(widgets::WidgetSize::Full);
+      auto w = widgets::LabelWidget::create("debug.label-full3", "Really Long Full Label Testing Extend Extend Ok Thanks")->setSize(widgets::WidgetSize::Full);
+      UIManager::registerWidget("Debug", w);
+    }
+    {
+      auto w = widgets::ToggleWidget::create("debug.toggle-half", "Half Toggle Test", false, [](bool toggled){
+        geode::log::info("Toggled Half 1 {}.", "value");
+      })->setSize(widgets::WidgetSize::Half);
+      UIManager::registerWidget("Debug", w);
+    }
+    {
+      auto w = widgets::ToggleWidget::create("debug.toggle-half2", "Long Text Half Toggle Test", false, [](bool toggled){
+        geode::log::info("Toggled Half 2 {}.", "value");
+      })->setSize(widgets::WidgetSize::Half);
+      UIManager::registerWidget("Debug", w);
+    }
+    {
+      auto w = widgets::ToggleWidget::create("debug.toggle-full", "Full Toggle Test", true, [](bool toggled){
+        geode::log::info("Toggled Full 1 {}.", "value");
+      })->setSize(widgets::WidgetSize::Full);
+      UIManager::registerWidget("Debug", w);
+    }
+    {
+      auto w = widgets::ToggleWidget::create("debug.toggle-full2", "Long Text Full Toggle Test - Long Text Full Toggle Test", true, [](bool toggled){
+        geode::log::info("Toggled Full 2 {}.", "value");
+      })->setSize(widgets::WidgetSize::Full);
       UIManager::registerWidget("Debug", w);
     }
     // #endif
