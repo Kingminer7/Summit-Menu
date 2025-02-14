@@ -49,11 +49,11 @@ namespace summit::ui::widgets {
     }
     CCMenu *menu = CCMenu::create();
     menu->setContentSize(node->getContentSize());
-    node->addChild(menu);
+    node->addChildAtPosition(menu, geode::Anchor::Center);
 
     auto toggle = CCMenuItemToggler::createWithStandardSprites(node, menu_selector(ToggleWidget::onToggle), .75f);
     toggle->toggle(value);
-    menu->addChildAtPosition(toggle, geode::Anchor::Left, {lWidth + 17.5f, 0.f});
+    menu->addChildAtPosition(toggle, geode::Anchor::Left, {lWidth + 20.f, 0.f});
 
     lab->limitLabelWidth(lWidth,.5f, .05f);
     node->addChildAtPosition(lab, geode::Anchor::Left, {5.f, 0.f});
@@ -99,7 +99,9 @@ namespace summit::ui::widgets {
   void ToggleWidget::onToggle(CCObject *sender) {
     if (!sender) return;
     if (auto toggler = geode::cast::typeinfo_cast<CCMenuItemToggler *>(sender)) {
-      if (auto w = UIManager::getWidgets().at(toggler->getID())) {
+      auto widgets = UIManager::getWidgets();
+      if (widgets.find(toggler->getParent()->getParent()->getID()) == widgets.end()) return;
+      if (auto w = widgets.at(toggler->getParent()->getParent()->getID())) {
         if (auto toggle = static_cast<ToggleWidget *>(w)) {
           if (toggle->callback) toggle->callback(toggler->isToggled());
         }

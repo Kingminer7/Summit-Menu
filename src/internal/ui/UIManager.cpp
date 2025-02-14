@@ -26,7 +26,7 @@ std::map<std::string, widgets::Widget *> UIManager::getWidgets(std::string tab) 
   return m_widgets.at(tab);
 }
 std::map<std::string, widgets::Widget *> UIManager::getWidgets() {
-  std::map<std::string, widgets::Widget *> all;
+  std::map<std::string, widgets::Widget *> all = {};
   for (auto& [tab, widgets] : m_widgets) {
     for (auto& [id, widget] : widgets) {
       all[id] = widget;
