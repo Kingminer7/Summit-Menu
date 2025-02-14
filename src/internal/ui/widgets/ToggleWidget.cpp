@@ -51,7 +51,7 @@ namespace summit::ui::widgets {
       auto descBtn = CCMenuItemSpriteExtra::create(
           descSpr, node, menu_selector(ToggleWidget::onInfoCC)
       );
-      menu->addChildAtPosition(descBtn, geode::Anchor::Left, {12.5f + lWidth, 0});
+      menu->addChildAtPosition(descBtn, geode::Anchor::Left, {47.5f + lWidth, 0});
     }
     if (!subWidgets.empty()) {
       lWidth -= 20.f;
