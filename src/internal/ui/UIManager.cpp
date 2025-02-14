@@ -99,13 +99,13 @@ $execute {
     {
       auto w = widgets::ToggleWidget::create("debug.toggle-full", "Full Toggle Test", true, [](bool toggled){
         geode::log::info("Toggled Full 1 {}.", "value");
-      })->setSize(widgets::WidgetSize::Full);
+      })->setSize(widgets::WidgetSize::Full)->setDescription("Test");
       UIManager::registerWidget("Debug", w);
     }
     {
       auto w = widgets::ToggleWidget::create("debug.toggle-full2", "Long Text Full Toggle Test - Long Text Full Toggle Test", true, [](bool toggled){
         geode::log::info("Toggled Full 2 {}.", "value");
-      })->setSize(widgets::WidgetSize::Full);
+      })->setSize(widgets::WidgetSize::Full)->setDescription("Test");
       UIManager::registerWidget("Debug", w);
     }
     // #endif
