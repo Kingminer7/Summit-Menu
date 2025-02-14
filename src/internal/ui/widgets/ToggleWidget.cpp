@@ -41,15 +41,21 @@ namespace summit::ui::widgets {
     auto lab = CCLabelBMFont::create(label.c_str(), "bigFont.fnt");
     lab->setAnchorPoint({0.f, .5f});
     auto lWidth = csize.width - 45.f;
+    CCMenu *menu = CCMenu::create();
+    menu->setContentSize(node->getContentSize());
+    node->addChildAtPosition(menu, geode::Anchor::Center);
     if (!desc.empty()) {
       lWidth -= 15.f;
+      auto descSpr = CCSprite::createWithSpriteFrameName("GJ_infoIcon_001.png");
+      descSpr->setScale(12.5 / descSpr->getContentHeight());
+      auto descBtn = CCMenuItemSpriteExtra::create(
+          descSpr, node, menu_selector(ToggleWidget::onInfoCC)
+      );
+      menu->addChildAtPosition(descBtn, geode::Anchor::Left, {12.5f + lWidth, 0});
     }
     if (!subWidgets.empty()) {
       lWidth -= 20.f;
     }
-    CCMenu *menu = CCMenu::create();
-    menu->setContentSize(node->getContentSize());
-    node->addChildAtPosition(menu, geode::Anchor::Center);
 
     auto toggle = CCMenuItemToggler::createWithStandardSprites(node, menu_selector(ToggleWidget::onToggle), .75f);
     toggle->toggle(value);

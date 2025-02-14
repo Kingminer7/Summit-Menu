@@ -51,6 +51,9 @@ namespace summit::ui::widgets {
       );
       menu->addChildAtPosition(descBtn, geode::Anchor::Left, {12.5f + lWidth, 0});
     }
+    if (!subWidgets.empty()) {
+      lWidth -= 20.f;
+    }
     lab->limitLabelWidth(lWidth,.5f, .05f);
     node->addChildAtPosition(lab, geode::Anchor::Left, {5.f + lWidth * (align.x), 0.f});
 
