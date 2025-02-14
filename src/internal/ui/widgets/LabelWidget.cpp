@@ -1,4 +1,5 @@
 #include "LabelWidget.hpp"
+#include "Geode/ui/Layout.hpp"
 
 using namespace cocos2d;
 
@@ -34,15 +35,21 @@ namespace summit::ui::widgets {
     auto node = CCNode::create();
     node->setContentSize(csize);
     node->setID(fmt::format("{}-{}", getType(), getId()));
+    CCMenu *menu = CCMenu::create();
+    menu->setContentSize(node->getContentSize());
+    node->addChildAtPosition(menu, geode::Anchor::Center);
     
     auto lab = CCLabelBMFont::create(label.c_str(), "bigFont.fnt");
     lab->setAnchorPoint(align);
     auto lWidth = csize.width - 10.f;
     if (!desc.empty()) {
       lWidth -= 15.f;
-    }
-    if (!subWidgets.empty()) {
-      lWidth -= 20.f;
+      auto descSpr = CCSprite::createWithSpriteFrameName("GJ_infoIcon_001.png");
+      descSpr->setScale(12.5 / descSpr->getContentHeight());
+      auto descBtn = CCMenuItemSpriteExtra::create(
+          descSpr, node, menu_selector(LabelWidget::onInfoCC)
+      );
+      menu->addChildAtPosition(descBtn, geode::Anchor::Left, {12.5f + lWidth, 0});
     }
     lab->limitLabelWidth(lWidth,.5f, .05f);
     node->addChildAtPosition(lab, geode::Anchor::Left, {5.f + lWidth * (align.x), 0.f});

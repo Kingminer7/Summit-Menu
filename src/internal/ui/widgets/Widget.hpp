@@ -28,5 +28,10 @@ public:
   std::string getDescription();
   WidgetSize getSize();
   std::map<std::string, Widget *> getSubWidgets();
+
+  // @brief Cocos ui
+  void onInfoCC(cocos2d::CCObject *sender);
+  // @brief Cocos ui
+  void onSubCC(cocos2d::CCObject *sender);
 };
 }
