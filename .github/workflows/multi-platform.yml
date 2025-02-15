@@ -44,7 +44,6 @@ jobs:
           target: iOS
           build-config: ${{ github.event.inputs.build_type != 'release' && 'RelWithDebInfo' || 'Release' }}
           export-pdb: ${{ github.event.inputs.build_type != 'release' }}
-          export-symbols: ${{ github.event.inputs.build_type != 'release' }}
           combine: true
           gh-pat: ${{ secrets.GH_PAT }}
   build:

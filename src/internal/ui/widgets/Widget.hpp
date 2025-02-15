@@ -17,21 +17,17 @@ protected:
   std::string label;
   std::string id;
   std::string desc;
-  std::map<std::string, Widget *> subWidgets;
+  std::map<std::string, Widget *> subWidgets = {};
   WidgetSize size = WidgetSize::Half;
+  cocos2d::CCNode *node = nullptr;
 public:
   virtual void renderImGui() = 0;
-  virtual cocos2d::CCNode *createCocosNode() = 0;
+  virtual cocos2d::CCNode *getCocosNode() = 0;
   virtual std::string getType() = 0;
   std::string getId();
   std::string getLabel();
   std::string getDescription();
   WidgetSize getSize();
   std::map<std::string, Widget *> getSubWidgets();
-
-  // @brief Cocos ui
-  void onInfoCC(cocos2d::CCObject *sender);
-  // @brief Cocos ui
-  void onSubCC(cocos2d::CCObject *sender);
 };
 }

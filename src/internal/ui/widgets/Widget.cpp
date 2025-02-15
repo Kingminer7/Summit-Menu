@@ -1,5 +1,4 @@
 #include "Widget.hpp"
-#include "Geode/binding/FLAlertLayer.hpp"
 
 using namespace cocos2d;
 
@@ -32,13 +31,5 @@ namespace summit::ui::widgets {
 
   std::map<std::string, Widget *> Widget::getSubWidgets() {
     return subWidgets;
-  }
-
-  void Widget::onInfoCC(CCObject *sender) {
-    FLAlertLayer::create("Not implemented", "Info popup not implemented.", "Ok")->show();
-  }
-
-  void Widget::onSubCC(CCObject *sender) {
-    FLAlertLayer::create("Not implemented", "Sub widget popup not implemented.", "Ok")->show();
   }
 }

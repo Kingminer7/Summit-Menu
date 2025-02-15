@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Geode/cocos/label_nodes/CCLabelBMFont.h"
+#include "Geode/cocos/menu_nodes/CCMenu.h"
 #include "Widget.hpp"
 
 namespace summit::ui::widgets {
@@ -9,7 +11,7 @@ namespace summit::ui::widgets {
       void init(std::string id, std::string label);
     public:
       void renderImGui() override;
-      cocos2d::CCNode *createCocosNode() override;
+      cocos2d::CCNode *getCocosNode() override;
       std::string getType() override;
       LabelWidget *setLabel(std::string label);
       LabelWidget *setDescription(std::string desc);
@@ -20,4 +22,23 @@ namespace summit::ui::widgets {
 
       static LabelWidget *create(std::string id, std::string label);
   };
+  namespace cocos {
+    class LabelNode : public cocos2d::CCNode {
+      protected:
+        LabelWidget *m_widget = nullptr;
+        cocos2d::CCMenu *m_buttonMenu = nullptr;
+        cocos2d::CCLabelBMFont *m_label = nullptr;
+      public:
+        bool init(LabelWidget *widget);
+        static LabelNode *create(LabelWidget *widget);
+        LabelWidget *getWidget();
+        cocos2d::CCLabelBMFont* getLabel();
+        cocos2d::CCMenu* getMenu();
+
+        // @brief Cocos ui
+        void onInfo(cocos2d::CCObject *sender);
+        // @brief Cocos ui
+        void onSubWidgets(cocos2d::CCObject *sender);
+    };
+  }
 }

@@ -144,7 +144,7 @@ bool CocosUI::UIPopup::setup() {
         for (std::string id2 : cache) {
           auto widget2 = widgets[id2];
           if (!widget2) continue;
-          auto node = widget2->createCocosNode();
+          auto node = widget2->getCocosNode();
           if (!node) continue;
           auto cl = hackScroll->m_contentLayer;
           cl->addChild(node);
@@ -155,7 +155,7 @@ bool CocosUI::UIPopup::setup() {
         cache = {};
       }
       if (widget->getSize() == widgets::WidgetSize::Half || !left) left = !left;
-      auto node = widget->createCocosNode();
+      auto node = widget->getCocosNode();
       if (!node) continue;
       auto cl = hackScroll->m_contentLayer;
       cl->addChild(node);
@@ -167,7 +167,7 @@ bool CocosUI::UIPopup::setup() {
     for (std::string id : cache) {
       auto widget = widgets[id];
       if (!widget) continue;
-      auto node = widget->createCocosNode();
+      auto node = widget->getCocosNode();
       if (!node) continue;
       auto cl = hackScroll->m_contentLayer;
       cl->addChild(node);
