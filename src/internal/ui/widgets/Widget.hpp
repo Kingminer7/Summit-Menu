@@ -19,10 +19,9 @@ protected:
   std::string desc;
   std::map<std::string, Widget *> subWidgets = {};
   WidgetSize size = WidgetSize::Half;
-  cocos2d::CCNode *node = nullptr;
 public:
   virtual void renderImGui() = 0;
-  virtual cocos2d::CCNode *getCocosNode() = 0;
+  virtual cocos2d::CCNode *createNode() = 0;
   virtual std::string getType() = 0;
   std::string getId();
   std::string getLabel();

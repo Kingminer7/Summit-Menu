@@ -30,9 +30,8 @@ namespace summit::ui::widgets {
     return this;
   }
 
-  CCNode *LabelWidget::getCocosNode() {
-    if (!node) node = cocos::LabelNode::create(this);
-    return node;
+  CCNode *LabelWidget::createNode() {
+    return cocos::LabelNode::create(this);
   }
 
   void LabelWidget::renderImGui() {

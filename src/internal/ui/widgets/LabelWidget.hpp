@@ -11,7 +11,7 @@ namespace summit::ui::widgets {
       void init(std::string id, std::string label);
     public:
       void renderImGui() override;
-      cocos2d::CCNode *getCocosNode() override;
+      cocos2d::CCNode *createNode() override;
       std::string getType() override;
       LabelWidget *setLabel(std::string label);
       LabelWidget *setDescription(std::string desc);
