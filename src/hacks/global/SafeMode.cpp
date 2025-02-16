@@ -63,6 +63,6 @@ namespace summit::hack::global {
   };
 
   $execute {
-    new SafeMode()->init();
+    new (SafeMode())->init();
   }
 }
