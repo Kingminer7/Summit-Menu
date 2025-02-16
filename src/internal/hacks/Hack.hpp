@@ -2,12 +2,15 @@
 
 namespace summit::hack {
 class Hack {
-protected:
-  std::string id;
-  std::string tab;
+  protected:
+    std::string id;
+    std::string tab;
 
-public:
-  std::string getId();
-  std::string getTab();
+  public:
+    virtual std::string getId() = 0;
+    virtual std::string getTab() = 0;
+
+    virtual void update(float delta) {};
+    virtual void init() = 0;
 };
 }

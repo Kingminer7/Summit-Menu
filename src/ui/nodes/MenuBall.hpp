@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Geode/cocos/cocoa/CCGeometry.h"
 #include "Geode/cocos/menu_nodes/CCMenu.h"
 #include "Geode/cocos/touch_dispatcher/CCTouch.h"

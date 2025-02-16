@@ -1,65 +1,83 @@
-#include "LabelWidget.hpp"
-#include "Geode/ui/Layout.hpp"
+#include "ToggleWidget.hpp"
 
 using namespace cocos2d;
 
 namespace summit::ui::widgets {
-  std::string LabelWidget::getType() {
-    return "Label";
+  std::string ToggleWidget::getType() {
+    return "Toggle";
   }
 
-  LabelWidget *LabelWidget::setLabel(std::string label) {
+  ToggleWidget *ToggleWidget::setLabel(std::string label) {
     this->label = label;
     return this;
   }
 
-  LabelWidget *LabelWidget::setDescription(std::string desc) {
+  ToggleWidget *ToggleWidget::setDescription(std::string desc) {
     this->desc = desc;
     return this;
   }
 
-  LabelWidget *LabelWidget::setSize(WidgetSize size) {
+  ToggleWidget *ToggleWidget::setSize(WidgetSize size) {
     this->size = size;
     return this;
   }
   
-  LabelWidget *LabelWidget::addSubWidget(Widget *widget) {
+  ToggleWidget *ToggleWidget::addSubWidget(Widget *widget) {
     if (widget) {
       subWidgets[widget->getId()] = widget;
     }
     return this;
   }
 
-  CCNode *LabelWidget::createNode() {
-    return cocos::LabelNode::create(this);
+  CCNode *ToggleWidget::createNode() {
+    return cocos::ToggleNode::create(this);
   }
 
-  void LabelWidget::renderImGui() {
+  void ToggleWidget::renderImGui() {
 
   }
 
-  void LabelWidget::init(std::string id, std::string label) {
+  void ToggleWidget::init(std::string id, std::string label, bool default_) {
     this->id = id;
     this->label = label;
+    this->toggled = default_;
   }
 
-  LabelWidget *LabelWidget::create(std::string id, std::string label) {
-    auto widget = new LabelWidget;
-    widget->init(id, label);
+  ToggleWidget *ToggleWidget::create(std::string id, std::string label, bool default_) {
+    auto widget = new ToggleWidget;
+    widget->init(id, label, default_);
     return widget;
   }
 
-  LabelWidget *LabelWidget::setAlignment(CCPoint align) {
+  ToggleWidget *ToggleWidget::setAlignment(CCPoint align) {
     this->align = align;
     return this;
   }
 
-  CCPoint LabelWidget::getAlignment() {
+  CCPoint ToggleWidget::getAlignment() {
     return this->align;
   }
 
+  ToggleWidget *ToggleWidget::toggle() {
+    toggled = !toggled;
+    return this;
+  }
+
+  ToggleWidget *ToggleWidget::toggle(bool toggled) {
+    this->toggled = toggled;
+    return this;
+  }
+
+  ToggleWidget *ToggleWidget::setCallback(std::function<void (bool toggled)> callback) {
+    this->callback = callback;
+    return this;
+  }
+  std::function<void (bool toggled)> ToggleWidget::getCallback() {
+    return callback;
+  }
+
   namespace cocos {
-    bool LabelNode::init(LabelWidget *widget) {
+    bool ToggleNode::init(ToggleWidget *widget) {
       if (!CCNode::init()) return false;
       this->m_widget = widget;
       auto size = getCCSize(widget->getSize());
@@ -81,7 +99,7 @@ namespace summit::ui::widgets {
         auto descSpr = CCSprite::createWithSpriteFrameName("GJ_infoIcon_001.png");
         descSpr->setScale(12.5 / descSpr->getContentHeight());
         auto descBtn = CCMenuItemSpriteExtra::create(
-            descSpr, this, menu_selector(LabelNode::onInfo)
+            descSpr, this, menu_selector(ToggleNode::onInfo)
         );
         m_buttonMenu->addChildAtPosition(descBtn, geode::Anchor::Left, {12.5f + lWidth, 0});
       }
@@ -91,10 +109,14 @@ namespace summit::ui::widgets {
         auto subSpr = CCSprite::createWithSpriteFrameName("accountBtn_settings_001.png");
         subSpr->setScale(22.5 / subSpr->getContentHeight());
         auto descBtn = CCMenuItemSpriteExtra::create(
-            subSpr, this, menu_selector(LabelNode::onSubWidgets)
+            subSpr, this, menu_selector(ToggleNode::onSubWidgets)
         );
         m_buttonMenu->addChildAtPosition(descBtn, geode::Anchor::Left, {18.35f + lWidth, 0});
       }
+
+      auto toggle = CCMenuItemToggler::createWithStandardSprites(this, menu_selector(ToggleNode::onToggle), .75f);
+      m_buttonMenu->addChildAtPosition(toggle, geode::Anchor::Left, {lWidth, 0});
+      lWidth -= 20;
 
       m_label = CCLabelBMFont::create(widget->getLabel().c_str(), "bigFont.fnt");
       m_label->setAnchorPoint(align);
@@ -104,8 +126,8 @@ namespace summit::ui::widgets {
       return true;
     }
 
-    LabelNode *LabelNode::create(LabelWidget *widget) {
-      auto ret = new LabelNode();
+    ToggleNode *ToggleNode::create(ToggleWidget *widget) {
+      auto ret = new ToggleNode();
       if (ret->init(widget)) {
         ret->autorelease();
         return ret;
@@ -115,16 +137,20 @@ namespace summit::ui::widgets {
       return nullptr;
     }
 
-    LabelWidget *LabelNode::getWidget() {
+    ToggleWidget *ToggleNode::getWidget() {
       return m_widget;
     }
 
-    void LabelNode::onInfo(CCObject *sender) {
+    void ToggleNode::onInfo(CCObject *sender) {
       FLAlertLayer::create(m_widget->getLabel().c_str(), m_widget->getDescription(), "Close")->show();
     }
 
-    void LabelNode::onSubWidgets(CCObject *sender) {
+    void ToggleNode::onSubWidgets(CCObject *sender) {
       FLAlertLayer::create("Not implemented", "Sub widget popup not implemented.", "Ok")->show();
+    }
+
+    void ToggleNode::onToggle(CCObject *sender) {
+      m_widget->toggle();
     }
   }
 }

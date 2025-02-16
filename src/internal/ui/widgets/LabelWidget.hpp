@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Geode/cocos/label_nodes/CCLabelBMFont.h"
-#include "Geode/cocos/menu_nodes/CCMenu.h"
 #include "Widget.hpp"
 
 namespace summit::ui::widgets {
@@ -35,9 +33,7 @@ namespace summit::ui::widgets {
         cocos2d::CCLabelBMFont* getLabel();
         cocos2d::CCMenu* getMenu();
 
-        // @brief Cocos ui
         void onInfo(cocos2d::CCObject *sender);
-        // @brief Cocos ui
         void onSubWidgets(cocos2d::CCObject *sender);
     };
   }
