@@ -61,4 +61,8 @@ namespace summit::hack::global {
       } else PlayLayer::destroyPlayer(p,g);
     }
   };
+
+  $execute {
+    new SafeMode()->init();
+  }
 }
