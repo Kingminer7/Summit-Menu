@@ -1,10 +1,12 @@
 #include "Config.hpp"
 #include "Geode/binding/GameStatsManager.hpp"
+#include "Geode/binding/PlayLayer.hpp"
 #include "ui/UIManager.hpp"
 #include "ui/widgets/ToggleWidget.hpp"
 #include <hacks/Hack.hpp>
 #include <LoadManager.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/PlayerObject.hpp>
 
 namespace summit::hack::global {
   class SafeMode : Hack {
@@ -29,14 +31,14 @@ namespace summit::hack::global {
 
   class $modify(SMPlayLayer, PlayLayer) {
     struct Fields {
-      int m_jumps;
-      int m_attempts;
+      int m_tJ;
+      int m_tA;
     };
 
     bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
       auto man = GameStatsManager::get();
-      m_jumps = man->getStat("1");
-      m_attempts = man->getStat("2");
+      m_fields->m_tJ = man->getStat("1");
+      m_fields->m_tA = man->getStat("2");
       return PlayLayer::init(level, useReplay, dontCreateObjects);
     }
 
@@ -50,6 +52,13 @@ namespace summit::hack::global {
       } else PlayLayer::levelComplete();
     }
 
+    void resetLevel() {
+      PlayLayer::resetLevel();
+      if (summit::Config::get<bool>("global.safemode", true)) {
+        m_level->m_attempts = m_level->m_attempts - 1;
+      }
+    }
+
     void destroyPlayer(PlayerObject *p, GameObject *g) {
       if (summit::Config::get<bool>("global.safemode", true)) {
         auto orig = m_isTestMode;
@@ -57,9 +66,18 @@ namespace summit::hack::global {
         PlayLayer::destroyPlayer(p,g);
         m_isTestMode = orig;
         auto man = GameStatsManager::get();
-        man->setStat("1", m_jumps);
-        man->setStat("2", m_attempts);
+        man->setStat("1", m_fields->m_tJ);
+        man->setStat("2", m_fields->m_tA);
       } else PlayLayer::destroyPlayer(p,g);
+    }
+  };
+
+  class $modify (SMPlayerObject, PlayerObject) {
+    void incrementJumps() {
+      if (summit::Config::get<bool>("global.safemode", true)) {
+        return;
+      }
+      PlayerObject::incrementJumps();
     }
   };
 
