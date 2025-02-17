@@ -66,6 +66,6 @@ namespace summit::hack::global {
   $execute {
     LoadManager::onLoad([](){
       (new SafeMode)->init();
-    },0,LoadTime::Early);
+    },1,LoadTime::Early);
   }
 }
