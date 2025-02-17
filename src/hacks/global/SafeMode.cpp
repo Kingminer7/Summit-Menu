@@ -12,9 +12,9 @@ namespace summit::hack::global {
       std::string getTab() override { return "global"; }
       std::string getId() override { return "global.safemode"; }
       void init() override {
-        ui::UIManager::registerWidget("Global", ui::widgets::ToggleWidget::create(getId(), "Safe Mode", Config::get<bool>("global.safemode", false))->setDescription("Prevents you from beating any levels.")->setCallback([](bool toggled) {
+        geode::log::info("Registering safe mode: {}", ui::UIManager::registerWidget("Global", ui::widgets::ToggleWidget::create(getId(), "Safe Mode", Config::get<bool>("global.safemode", false))->setDescription("Prevents you from beating any levels.")->setCallback([](bool toggled) {
           Config::set<bool>("global.safemode", toggled);
-        }));
+        })));
       }
   };
 
