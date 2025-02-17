@@ -3,6 +3,7 @@
 #include "ui/UIManager.hpp"
 #include "ui/widgets/ToggleWidget.hpp"
 #include <hacks/Hack.hpp>
+#include <LoadManager.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 
 namespace summit::hack::global {
