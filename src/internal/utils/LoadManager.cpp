@@ -3,20 +3,20 @@
 #include "Geode/loader/ModEvent.hpp"
 
 namespace summit {
-  LoadManager *LoadManager::instance = nullptr;
+  LoadManager *LoadManager::m_instance = nullptr;
 
   LoadManager *LoadManager::get() {
-    if (!instance) instance = new LoadManager;
-    return instance;
+    if (!m_instance) m_instance = new LoadManager;
+    return m_instance;
   }
   
   void LoadManager::onLoad(std::function<void ()> function, LoadManager::LoadType loadType, int prio) {
     if (!function) return;
-    callbacks.insert({prio, {function, loadType}});
+    m_callbacks.insert({prio, {function, loadType}});
   }
 
   std::multimap<int, std::pair<std::function<void ()>, LoadManager::LoadType>> LoadManager::getCallbacks() {
-    return callbacks;
+    return m_callbacks;
   }
   
 }

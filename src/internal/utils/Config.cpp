@@ -3,23 +3,23 @@
 
 #include "Config.hpp"
 namespace summit {
-  matjson::Value Config::saved = nullptr;
-  matjson::Value Config::temp = nullptr;
+  matjson::Value Config::m_saved = nullptr;
+  matjson::Value Config::m_temp = nullptr;
 
-  bool Config::initialized = false;
+  bool Config::m_inited = false;
 
   void Config::init() {
-    if (initialized) return;
+    if (m_inited) return;
     auto mod = geode::Mod::get();
-    saved = mod->getSavedValue<matjson::Value>("data", {});
-    temp = {};
-    initialized = true;
+    m_saved = mod->getSavedValue<matjson::Value>("data", {});
+    m_temp = {};
+    m_inited = true;
   }
 
   void Config::save() {
-    if (!initialized) return;
+    if (!m_inited) return;
     auto mod = geode::Mod::get();
-    mod->setSavedValue<matjson::Value>("data", saved);
+    mod->setSavedValue<matjson::Value>("data", m_saved);
   }
 }
 

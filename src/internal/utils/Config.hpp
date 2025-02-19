@@ -5,30 +5,30 @@
 namespace summit {
   class Config {
     protected:
-      static matjson::Value temp;
-      static matjson::Value saved;
+      static matjson::Value m_temp;
+      static matjson::Value m_saved;
       
-      static bool initialized;
+      static bool m_inited;
     public:
       static void init();
       static void save();
 
       template<typename T>
       static T get(std::string key, T default_, bool isTemp = false) {
-        if (!initialized) return nullptr;
+        if (!m_inited) return nullptr;
         if (isTemp)
-          return temp.get<T>(key) || default_;
+          return m_temp.get<T>(key) || default_;
         else
-          return saved.get<T>(key) || default_;
+          return m_saved.get<T>(key) || default_;
       }
 
       template<typename T>
       static T set(std::string key, T value, bool isTemp = false) {
-        if (!initialized) return nullptr;
+        if (!m_inited) return nullptr;
         if (isTemp)
-          return temp.set(key, value);
+          return m_temp.set(key, value);
         else
-          return saved.set(key, value);
+          return m_saved.set(key, value);
       }
   };
 }

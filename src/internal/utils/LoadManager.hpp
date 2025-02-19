@@ -11,8 +11,8 @@ namespace summit {
         Initial,
       };
     protected:
-      static LoadManager *instance;
-      std::multimap<int, std::pair<std::function<void ()>, LoadType>> callbacks = {};
+      static LoadManager *m_instance;
+      std::multimap<int, std::pair<std::function<void ()>, LoadType>> m_callbacks = {};
     public:
       static LoadManager *get();
       
