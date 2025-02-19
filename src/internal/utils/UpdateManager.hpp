@@ -9,7 +9,7 @@ namespace summit {
     protected:
       static UpdateManager *instance;
       std::list<std::string> disabled = {};
-      std::map<std::string, cocos2d::SEL_SCHEDULE> callbacks = {};
+      std::map<std::string, std::function<void (float dt)>> callbacks = {};
       bool init() override;
 
       void update(float dt) override;
@@ -17,10 +17,10 @@ namespace summit {
       static UpdateManager *get();
 
       
-      void registerUpdate(std::string id, cocos2d::SEL_SCHEDULE callback);
+      void registerUpdate(std::string id, std::function<void (float dt)> callback);
       void removeUpdate(std::string id);
       void enableUpdate(std::string id);
       void disableUpdate(std::string id);
-      std::map<std::string, cocos2d::SEL_SCHEDULE> getCallbacks();
+      std::map<std::string, std::function<void (float dt)>> getCallbacks();
   };
 }
