@@ -1,4 +1,5 @@
 #include "Geode/Geode.hpp"
+#include "../nodes/MenuBall.hpp"
 #include "Geode/ui/SceneManager.hpp"
 #include "ui/Style.hpp"
 #include "Cocos.hpp"
@@ -22,14 +23,18 @@ namespace summit::ui::styles {
 
   void CocosUIStyle::show() {
     m_visible = true;
+    MenuBall::get()->setHandlingTouch(false);
     if (auto ui = CocosUI::create(this)) {
       ui->show();
-    geode::SceneManager::get()->keepAcrossScenes(ui);
+      // the funny km7 again
+      ui->setZOrder(10710955 + 1);
+      geode::SceneManager::get()->keepAcrossScenes(ui);
     }
   }
 
   void CocosUIStyle::hide() {
     m_visible = false;
+    MenuBall::get()->setHandlingTouch(true);
     if (auto node = cocos2d::CCScene::get()->getChildByID("km7dev.summit_menu/cocos-ui")) {
       if (auto ui = static_cast<CocosUI *>(node)) {
         ui->onClose(ui);
@@ -39,6 +44,8 @@ namespace summit::ui::styles {
 
   void CocosUIStyle::hideFromPopup() {
     m_visible = false;
+    
+    MenuBall::get()->setHandlingTouch(true);
   }
 
   // Called for whatever system is used

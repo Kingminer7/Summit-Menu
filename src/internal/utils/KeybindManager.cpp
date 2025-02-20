@@ -45,14 +45,23 @@ namespace summit::keybinds {
 
 
   bool checkBinds(Keys key, KeyStates state, int modifiers) {
-    geode::log::info("{} {} {}", (int) key, (int) state, modifiers);
+    for (auto& bind : KeybindManager::get()->getKeybinds()) {
+      int bindModifiers = 0;
+      for (auto& mod : bind.second->m_modifiers) {
+        bindModifiers += (int) mod;
+      }
+      if (bind.second->m_key == key && bind.second->m_state == state && bindModifiers == modifiers) {
+        if (bind.second->m_callback()) return true;
+      }
+    }
     return false;
   }
 
   #ifdef GEODE_IS_WINDOWS
     class $modify (KeybindEGLView, cocos2d::CCEGLView) {
       void onGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-        if (!checkBinds((Keys) key, (KeyStates) action, mods))
+        auto res = checkBinds((Keys) key, (KeyStates) action, mods);
+        if (!res)
         CCEGLView::onGLFWKeyCallback(window, key, scancode, action, mods);
       }
     };

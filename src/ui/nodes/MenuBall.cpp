@@ -161,6 +161,12 @@ $onLoad(MenuLayer, 0) {
     if (auto style = summit::ui::StyleManager::get()->getCurrentStyle())
       style->toggle();
   });
+
+  auto bind = summit::keybinds::Keybind::create("openmenu", "Open Menu", [ball](){
+      ball->getCallback()();
+      return true;
+    }, summit::keybinds::Keys::Tab);
+    summit::keybinds::KeybindManager::get()->registerKeybind(bind);
 }
 
 #include <Geode/modify/CCScene.hpp>
