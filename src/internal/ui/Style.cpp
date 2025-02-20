@@ -42,9 +42,13 @@ namespace summit::ui {
 
   void StyleManager::setCurrentStyle(std::string id) {
     if (m_styles.contains(id)) {
-      m_currentStyle->deinit();
+      if (m_currentStyle) m_currentStyle->deinit();
       m_currentStyle = m_styles[id];
       m_currentStyle->init();
     }
+  }
+
+  $onLoad(Initial, 5) {
+    StyleManager::get()->setCurrentStyle("CocosUI");
   }
 }

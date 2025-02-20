@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Geode/loader/Log.hpp"
 #include <matjson.hpp>
 
 namespace summit {
@@ -15,20 +16,23 @@ namespace summit {
 
       template<typename T>
       static T get(std::string key, T default_, bool isTemp = false) {
-        if (!m_inited) return nullptr;
+        if (!m_inited) {
+          geode::log::error("Unable to get config value {} - not initialized!", key);
+          return default_;
+        }
         if (isTemp)
-          return m_temp.get<T>(key) || default_;
+          return m_temp[key].as<T>().unwrapOr(default_);
         else
-          return m_saved.get<T>(key) || default_;
+          return m_saved[key].as<T>().unwrapOr(default_);
       }
 
       template<typename T>
-      static T set(std::string key, T value, bool isTemp = false) {
-        if (!m_inited) return nullptr;
+      static void set(std::string key, T value, bool isTemp = false) {
+        if (!m_inited) return geode::log::error("Unable to set config value {} - not initialized!", key);
         if (isTemp)
-          return m_temp.set(key, value);
+          m_temp.set(key, value);
         else
-          return m_saved.set(key, value);
+          m_saved.set(key, value);
       }
   };
 }

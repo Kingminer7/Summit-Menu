@@ -1,5 +1,7 @@
 #pragma once
 
+// For $onLoad
+#include "Geode/DefaultInclude.hpp"
 #include <functional>
 #include <map>
 

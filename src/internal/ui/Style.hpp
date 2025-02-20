@@ -1,7 +1,5 @@
 #pragma once
 
-// For $onLoad
-#include "Geode/DefaultInclude.hpp"
 #include <utils/LoadManager.hpp>
 #include <map>
 #include <string>
@@ -40,7 +38,7 @@ namespace summit::ui {
       static StyleManager *m_instance;
       std::map<std::string, Style*> m_styles = {};
 
-      Style *m_currentStyle;
+      Style *m_currentStyle = nullptr;
     public:
       static StyleManager *get();
 
