@@ -1,7 +1,10 @@
 #pragma once
 
+#include "Geode/cocos/menu_nodes/CCMenu.h"
 #include "Geode/ui/Popup.hpp"
+#include "Geode/ui/ScrollLayer.hpp"
 #include "ui/Style.hpp"
+#include <map>
 
 namespace summit::ui::styles {
   class CocosUIStyle : public Style {
@@ -25,6 +28,9 @@ namespace summit::ui::styles {
       bool m_closeHandled = false;
       bool setup(CocosUIStyle *style) override;
       CocosUIStyle *m_style = nullptr;
+      geode::ScrollLayer *m_tabScroll;
+      geode::ScrollLayer *m_hackScroll;
+      std::map<std::string, cocos2d::CCMenu *> hackMenus = {};
     public:
       static CocosUI* create(CocosUIStyle *style);
       void onClose(CCObject *) override;

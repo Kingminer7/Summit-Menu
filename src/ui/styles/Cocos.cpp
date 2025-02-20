@@ -1,3 +1,4 @@
+#include "GUI/CCControlExtension/CCScale9Sprite.h"
 #include "Geode/Geode.hpp"
 #include "../nodes/MenuBall.hpp"
 #include "Geode/ui/SceneManager.hpp"
@@ -54,7 +55,7 @@ namespace summit::ui::styles {
     
   }
 
-
+  // Popup
 
   bool CocosUI::setup(CocosUIStyle *style) {
     this->m_style = style;
@@ -70,6 +71,24 @@ namespace summit::ui::styles {
 
     m_closeBtn->setPosition(m_closeBtn->getScaledContentWidth() / 2, ws.height - m_closeBtn->getScaledContentHeight() / 2);
     m_closeBtn->setID("close-button");
+
+    // idk some hardcoded constant values ig
+    cocos2d::CCSize tabBtnSize = {80, 20};
+
+    m_tabScroll = geode::ScrollLayer::create(tabBtnSize);
+    m_tabScroll->setID("tab-btn-scroll");
+    m_tabScroll->setContentSize({tabBtnSize.width, 240});
+    m_tabScroll->ignoreAnchorPointForPosition(false);
+    m_mainLayer->addChildAtPosition(m_tabScroll, geode::Anchor::Left, {tabBtnSize.width / 2 + 10, 0});
+
+    auto btnBg = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
+    btnBg->setID("btn-bg");
+    btnBg->setScale(0.25f);
+    btnBg->setContentSize({tabBtnSize.width * 4, 240 * 4});
+    btnBg->setColor({0,0,0});
+    btnBg->setOpacity(75);
+    btnBg->setZOrder(-1);
+    m_tabScroll->addChildAtPosition(btnBg, geode::Anchor::Center);
 
     return true;
   }
