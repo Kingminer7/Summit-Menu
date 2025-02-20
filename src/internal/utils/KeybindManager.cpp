@@ -1,7 +1,7 @@
 #include "KeybindManager.hpp"
-#include "Geode/cocos/robtop/keyboard_dispatcher/CCKeyboardDelegate.h"
 #include "Geode/loader/Log.hpp"
 #include <Geode/modify/CCKeyboardDispatcher.hpp>
+#include <Geode/modify/CCEGLView.hpp>
 
 namespace summit::keybinds {
   void Keybind::init(std::string id, std::string name, std::function<bool ()> callback, Keys key, KeyStates state, std::list<Modifiers> modifiers) {
@@ -50,7 +50,6 @@ namespace summit::keybinds {
   }
 
   #ifdef GEODE_IS_WINDOWS
-    #include <Geode/modify/CCEGLView.hpp>
     class $modify (KeybindEGLView, cocos2d::CCEGLView) {
       void onGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
         if (!checkBinds((Keys) key, (KeyStates) action, mods))
