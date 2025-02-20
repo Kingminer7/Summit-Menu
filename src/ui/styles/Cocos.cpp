@@ -1,4 +1,6 @@
 #include "Geode/Geode.hpp"
+#include "Geode/ui/SceneManager.hpp"
+#include "ui/Style.hpp"
 #include "Cocos.hpp"
 
 namespace summit::ui::styles {
@@ -22,6 +24,7 @@ namespace summit::ui::styles {
     m_visible = true;
     if (auto ui = CocosUI::create(this)) {
       ui->show();
+    geode::SceneManager::get()->keepAcrossScenes(ui);
     }
   }
 
@@ -70,11 +73,7 @@ namespace summit::ui::styles {
     }
     m_closeHandled = true;
     Popup::onClose(sender);
-  }
-
-  void CocosUI::removeFromParent() {
-    if (m_closeHandled) return;
-    m_style->hideFromPopup();
+    geode::SceneManager::get()->forget(this);
   }
     
   CocosUI* CocosUI::create(CocosUIStyle *style) {

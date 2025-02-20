@@ -14,6 +14,7 @@ namespace summit::ui::styles {
 
       virtual void show() override;
       virtual void hide() override;
+
       void hideFromPopup();
 
       void update(float dt) override;
@@ -27,6 +28,5 @@ namespace summit::ui::styles {
     public:
       static CocosUI* create(CocosUIStyle *style);
       void onClose(CCObject *) override;
-      void removeFromParent() override;
   };
 }
