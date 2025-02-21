@@ -1,3 +1,4 @@
+#ifndef GEODE_IS_IOS
 #pragma once
 
 #include <list>
@@ -171,3 +172,4 @@ namespace summit::keybinds {
       std::map<std::string, Keybind *> getKeybinds();
   };
 }
+#endif

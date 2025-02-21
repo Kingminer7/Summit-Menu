@@ -3,6 +3,8 @@
 #include <Geode/modify/CCKeyboardDispatcher.hpp>
 #include <Geode/modify/CCEGLView.hpp>
 
+#ifndef GEODE_IS_IOS
+
 namespace summit::keybinds {
   void Keybind::init(std::string id, std::string name, std::function<bool ()> callback, Keys key, KeyStates state, std::list<Modifiers> modifiers) {
     m_id = id;
@@ -210,3 +212,5 @@ namespace summit::keybinds {
     };
   #endif
 }
+
+#endif

@@ -162,11 +162,13 @@ $onLoad(MenuLayer, 0) {
       style->toggle();
   });
 
+  #ifndef GEODE_IS_IOS
   auto bind = summit::keybinds::Keybind::create("openmenu", "Open Menu", [ball](){
       ball->getCallback()();
       return true;
     }, summit::keybinds::Keys::Tab);
     summit::keybinds::KeybindManager::get()->registerKeybind(bind);
+  #endif
 }
 
 #include <Geode/modify/CCScene.hpp>
