@@ -6,6 +6,7 @@
 #include "Geode/cocos/menu_nodes/CCMenu.h"
 #include "Geode/ui/Layout.hpp"
 #include "Geode/ui/SceneManager.hpp"
+#include "ccTypes.h"
 #include "ui/Style.hpp"
 #include "Cocos.hpp"
 
@@ -102,6 +103,11 @@ namespace summit::ui::styles {
     btnBg->setZOrder(-1);
     m_hackScroll->addChildAtPosition(btnBg, geode::Anchor::Center);
 
+    // I refuse to change this name.
+    auto holderBecauseScrollLayerIsSuperStupidAndIHateIt = cocos2d::CCNode::create();
+    holderBecauseScrollLayerIsSuperStupidAndIHateIt->setID("dumb-holder");
+    m_hackScroll->m_contentLayer->addChildAtPosition(holderBecauseScrollLayerIsSuperStupidAndIHateIt, geode::Anchor::Center);
+
     auto tabY = -5;
 
     for (std::string tab : {"These", "tabs", "are", "temporarily", "hardcoded", "lel", "Config", "Geode", "Reference", "Hi my name is Firee"}) {
@@ -111,7 +117,7 @@ namespace summit::ui::styles {
       btnBg->setContentSize(tabBtnSize * 4);
       btnBg->setColor({0,0,0});
       btnBg->setOpacity(75);
-      tabY += tabBtnSize.height + 3.f; // 5 for gap
+      tabY += tabBtnSize.height + 3.f;
   
       auto btnLab = cocos2d::CCLabelBMFont::create(tab.c_str(), "bigFont.fnt");
       btnLab->limitLabelWidth(tabBtnSize.width - 5, .5f, .05f);
@@ -124,17 +130,19 @@ namespace summit::ui::styles {
       btn->addChildAtPosition(btnLab, geode::Anchor::Center);
       btn->m_animationEnabled = false;
       btn->m_colorEnabled = true;
-      btn->m_baseColor = {0,0,0};
+      btn->m_baseColor = tab == m_currentTab ? cocos2d::ccColor3B({160,160,160}) : cocos2d::ccColor3B({0,0,0});
+      if (auto img = static_cast<cocos2d::CCSprite *>(btn->getNormalImage())) img->setColor(btn->m_baseColor);
       btn->m_selectColor = {50,50,50};
       m_tabMenu->addChild(btn);
 
       cocos2d::CCMenu *menu = cocos2d::CCMenu::create();
       menu->setID(tab);
       menu->setContentSize({fullHackSize.width, height});
-      menu->setVisible(tab == m_currentTab);
       menu->ignoreAnchorPointForPosition(false);
+      menu->setVisible(m_currentTab == tab);
       m_hackMenus[tab] = menu;
-      m_hackScroll->m_contentLayer->addChildAtPosition(menu, geode::Anchor::Center);
+      
+      holderBecauseScrollLayerIsSuperStupidAndIHateIt->addChildAtPosition(menu, geode::Anchor::Center);
     }
     m_tabMenu->updateLayout();
     
@@ -151,8 +159,8 @@ namespace summit::ui::styles {
       old->m_baseColor = {0, 0, 0};
       if (auto img = static_cast<cocos2d::CCSprite *>(old->getNormalImage())) img->setColor({0, 0, 0});
     }
-    node->m_baseColor = {40, 0, 40};
-    if (auto img = static_cast<cocos2d::CCSprite *>(node->getNormalImage())) img->setColor({40, 40, 40});
+    node->m_baseColor = {160, 160, 160};
+    if (auto img = static_cast<cocos2d::CCSprite *>(node->getNormalImage())) img->setColor({160, 160, 160});
     if (auto menu = m_hackMenus[m_currentTab]) {
       menu->setVisible(false);
     }
