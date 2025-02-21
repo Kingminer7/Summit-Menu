@@ -28,10 +28,12 @@ namespace summit::ui::styles {
       bool m_closeHandled = false;
       bool setup(CocosUIStyle *style) override;
       CocosUIStyle *m_style = nullptr;
-      geode::ScrollLayer *m_tabScroll;
+      std::string m_currentTab = "These";
+      cocos2d::CCMenu *m_tabMenu;
       geode::ScrollLayer *m_hackScroll;
-      std::map<std::string, cocos2d::CCMenu *> hackMenus = {};
+      std::map<std::string, cocos2d::CCMenu *> m_hackMenus = {};
     public:
+      void onTab(CCObject *sender);
       static CocosUI* create(CocosUIStyle *style);
       void onClose(CCObject *) override;
   };

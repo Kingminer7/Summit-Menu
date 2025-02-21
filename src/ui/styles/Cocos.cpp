@@ -1,6 +1,10 @@
 #include "GUI/CCControlExtension/CCScale9Sprite.h"
 #include "Geode/Geode.hpp"
 #include "../nodes/MenuBall.hpp"
+#include "../nodes/CFMenuItem.hpp"
+#include "Geode/cocos/label_nodes/CCLabelBMFont.h"
+#include "Geode/cocos/menu_nodes/CCMenu.h"
+#include "Geode/ui/Layout.hpp"
 #include "Geode/ui/SceneManager.hpp"
 #include "ui/Style.hpp"
 #include "Cocos.hpp"
@@ -73,24 +77,91 @@ namespace summit::ui::styles {
     m_closeBtn->setID("close-button");
 
     // idk some hardcoded constant values ig
+    float height = 240.f;
     cocos2d::CCSize tabBtnSize = {80, 20};
+    cocos2d::CCSize fullHackSize = {370, 30};
 
-    m_tabScroll = geode::ScrollLayer::create(tabBtnSize);
-    m_tabScroll->setID("tab-btn-scroll");
-    m_tabScroll->setContentSize({tabBtnSize.width, 240});
-    m_tabScroll->ignoreAnchorPointForPosition(false);
-    m_mainLayer->addChildAtPosition(m_tabScroll, geode::Anchor::Left, {tabBtnSize.width / 2 + 10, 0});
+    m_tabMenu = cocos2d::CCMenu::create();
+    m_tabMenu->setID("tab-menu");
+    m_tabMenu->setLayout(geode::AxisLayout::create(geode::Axis::Column)->setCrossAxisOverflow(false)->setAxisAlignment(geode::AxisAlignment::End)->setAxisReverse(true)->setAutoScale(false)->setGap(3.f));
+    m_tabMenu->setContentSize({tabBtnSize.width, height});
+    m_tabMenu->ignoreAnchorPointForPosition(false);
+    m_mainLayer->addChildAtPosition(m_tabMenu, geode::Anchor::Left, {tabBtnSize.width / 2 + 10, 0});
+
+    m_hackScroll = geode::ScrollLayer::create({fullHackSize.width, height});
+    m_hackScroll->setID("hack-scroll");
+    m_hackScroll->setContentSize({fullHackSize.width, height});
+    m_hackScroll->ignoreAnchorPointForPosition(false);
+    m_mainLayer->addChildAtPosition(m_hackScroll, geode::Anchor::Right, {-fullHackSize.width / 2 - 10, 0});
 
     auto btnBg = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
-    btnBg->setID("btn-bg");
-    btnBg->setScale(0.25f);
-    btnBg->setContentSize({tabBtnSize.width * 4, 240 * 4});
+    btnBg->setID("background");
+    btnBg->setContentSize({fullHackSize.width, height});
     btnBg->setColor({0,0,0});
     btnBg->setOpacity(75);
     btnBg->setZOrder(-1);
-    m_tabScroll->addChildAtPosition(btnBg, geode::Anchor::Center);
+    m_hackScroll->addChildAtPosition(btnBg, geode::Anchor::Center);
+
+    auto tabY = -5;
+
+    for (std::string tab : {"These", "tabs", "are", "temporarily", "hardcoded", "lel", "Config", "Geode", "Reference", "Hi my name is Firee"}) {
+      auto btnBg = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
+      btnBg->setID("btn-bg");
+      btnBg->setScale(0.25f);
+      btnBg->setContentSize(tabBtnSize * 4);
+      btnBg->setColor({0,0,0});
+      btnBg->setOpacity(75);
+      tabY += tabBtnSize.height + 3.f; // 5 for gap
+  
+      auto btnLab = cocos2d::CCLabelBMFont::create(tab.c_str(), "bigFont.fnt");
+      btnLab->limitLabelWidth(tabBtnSize.width - 5, .5f, .05f);
+      btnLab->setID("btn-label");
+      
+      auto btn = CFMenuItem::create(
+          btnBg, this, menu_selector(CocosUI::onTab)
+      );
+      btn->setID(tab);
+      btn->addChildAtPosition(btnLab, geode::Anchor::Center);
+      btn->m_animationEnabled = false;
+      btn->m_colorEnabled = true;
+      btn->m_baseColor = {0,0,0};
+      btn->m_selectColor = {50,50,50};
+      m_tabMenu->addChild(btn);
+
+      cocos2d::CCMenu *menu = cocos2d::CCMenu::create();
+      menu->setID(tab);
+      menu->setContentSize({fullHackSize.width, height});
+      menu->setVisible(tab == m_currentTab);
+      menu->ignoreAnchorPointForPosition(false);
+      m_hackMenus[tab] = menu;
+      m_hackScroll->m_contentLayer->addChildAtPosition(menu, geode::Anchor::Center);
+    }
+    m_tabMenu->updateLayout();
+    
 
     return true;
+  }
+
+  void CocosUI::onTab(cocos2d::CCObject *sender) {
+    if (!sender) return;
+    auto node = static_cast<CFMenuItem*>(sender);
+    if (!node) return;
+    auto old = static_cast<CFMenuItem*>(m_tabMenu->getChildByID(m_currentTab));
+    if (old) {
+      old->m_baseColor = {0, 0, 0};
+      if (auto img = static_cast<cocos2d::CCSprite *>(old->getNormalImage())) img->setColor({0, 0, 0});
+    }
+    node->m_baseColor = {40, 0, 40};
+    if (auto img = static_cast<cocos2d::CCSprite *>(node->getNormalImage())) img->setColor({40, 40, 40});
+    if (auto menu = m_hackMenus[m_currentTab]) {
+      menu->setVisible(false);
+    }
+    m_currentTab = node->getID();
+    if (auto menu = m_hackMenus[m_currentTab]) {
+      menu->setVisible(true);
+      m_hackScroll->m_contentLayer->setContentHeight(std::max(m_hackScroll->getContentHeight(), menu->getContentHeight()));
+    }
+    m_hackScroll->scrollToTop();
   }
 
   void CocosUI::onClose(cocos2d::CCObject *sender) {
