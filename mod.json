@@ -19,6 +19,9 @@
 			]
 		}
 	},
+	"tags": [
+		"cheat"
+	],
 	"api": {
 		"include": [
 			"include/*.hpp"
