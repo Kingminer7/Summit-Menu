@@ -1,14 +1,8 @@
-#include "GUI/CCControlExtension/CCScale9Sprite.h"
-#include "Geode/Geode.hpp"
 #include "../nodes/MenuBall.hpp"
 #include "../nodes/CFMenuItem.hpp"
-#include "Geode/cocos/label_nodes/CCLabelBMFont.h"
-#include "Geode/cocos/menu_nodes/CCMenu.h"
-#include "Geode/ui/Layout.hpp"
-#include "Geode/ui/SceneManager.hpp"
-#include "ccTypes.h"
 #include "ui/Style.hpp"
 #include "Cocos.hpp"
+#include <Geode/Geode.hpp>
 
 namespace summit::ui::styles {
   void CocosUIStyle::init() {
