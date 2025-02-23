@@ -7,6 +7,7 @@
 #include <map>
 
 namespace summit::ui::styles {
+
   class CocosUIStyle : public Style {
     public:
       virtual void init() override;
@@ -37,4 +38,15 @@ namespace summit::ui::styles {
       static CocosUI* create(CocosUIStyle *style);
       void onClose(CCObject *) override;
   };
+
+  namespace CUI {
+    class LabelNode : public cocos2d::CCNode {
+      protected:
+        cocos2d::CCMenu *m_buttonMenu = nullptr;
+        cocos2d::CCLabelBMFont *m_label = nullptr;
+        bool init(std::string id, std::string label);
+      public:
+        static LabelNode *create(std::string id, std::string label);
+    };
+  }
 }

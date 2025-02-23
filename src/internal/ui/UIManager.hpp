@@ -48,6 +48,7 @@ namespace summit::ui {
       std::string m_label = "";
       virtual void init(std::string id, std::string label);
     public:
+      virtual std::string getType() {return "Label";} // it's just easier to make the base a label  
       std::string getId();
       std::string getLabel();
       auto *setLabel(std::string label);

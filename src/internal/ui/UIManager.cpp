@@ -82,6 +82,10 @@ namespace summit::ui {
   std::string Widget::getId() {
     return m_id;
   }
+
+  std::string Widget::getLabel  () {
+    return m_label;
+  }
   
   auto *Widget::setLabel(std::string label) {
     this->m_label = label;

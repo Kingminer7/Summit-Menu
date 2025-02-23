@@ -5,6 +5,15 @@
 #include <Geode/Geode.hpp>
 
 namespace summit::ui::styles {
+
+  cocos2d::CCNode *fromWidget(Widget *widget) {
+    // if (widget->getType() == "SomeType") {
+      
+    // }
+    auto node = CUI::LabelNode::create(widget->getId(), widget->getLabel());
+    return node;
+  }
+
   void CocosUIStyle::init() {
     
   }
@@ -137,6 +146,11 @@ namespace summit::ui::styles {
       menu->ignoreAnchorPointForPosition(false);
       menu->setVisible(m_currentTab == id);
       m_hackMenus[id] = menu;
+
+      for (auto const& [wid, widget] : tab->getWidgets()) {
+        auto node = fromWidget(widget);
+        menu->addChild(node);
+      }
      
       holderBecauseScrollLayerIsSuperStupidAndIHateIt->addChildAtPosition(menu, geode::Anchor::Center);
     }
@@ -190,6 +204,34 @@ namespace summit::ui::styles {
 
     delete ret;
     return nullptr;
+  }
+
+  namespace CUI {
+    bool LabelNode::init(std::string id, std::string label) {
+      if (!CCNode::init()) return false;
+
+      setID(fmt::format("label-{}", id));
+
+      setContentSize({185, 30});
+
+      m_label = cocos2d::CCLabelBMFont::create(label.c_str(), "chatFont.fnt");
+      m_label->limitLabelWidth(getContentWidth() - 10.f, 1.f, .05f);
+      m_label->setID("label");
+      addChildAtPosition(m_label, geode::Anchor::Center);
+
+      return true;
+    }
+    
+    LabelNode *LabelNode::create(std::string id, std::string label) {
+      auto ret = new LabelNode();
+      if (ret->init(id, label)) {
+        ret->autorelease();
+        return ret;
+      }
+  
+      delete ret;
+      return nullptr;
+    }
   }
 
   RegisterStyle(CocosUIStyle)
