@@ -3,6 +3,7 @@
 #include "Geode/cocos/menu_nodes/CCMenu.h"
 #include "Geode/ui/Popup.hpp"
 #include "Geode/ui/ScrollLayer.hpp"
+#include <ui/UIManager.hpp>
 #include "ui/Style.hpp"
 #include <map>
 
@@ -44,9 +45,22 @@ namespace summit::ui::styles {
       protected:
         cocos2d::CCMenu *m_buttonMenu = nullptr;
         cocos2d::CCLabelBMFont *m_label = nullptr;
-        bool init(std::string id, std::string label);
+        Widget *m_widget = nullptr;
+        bool init(Widget *widget);
       public:
-        static LabelNode *create(std::string id, std::string label);
+        static LabelNode *create(Widget *widget);
+    };
+    class ToggleNode : public cocos2d::CCNode {
+      protected:
+        cocos2d::CCMenu *m_buttonMenu = nullptr;
+        cocos2d::CCLabelBMFont *m_label = nullptr;
+        CCMenuItemToggler *m_toggle = nullptr;
+        ToggleWidget *m_widget = nullptr;
+        bool init(Widget *widget);
+      public:
+        static ToggleNode *create(Widget *widget);
+
+        void onToggle(cocos2d::CCObject *sender);
     };
   }
 }

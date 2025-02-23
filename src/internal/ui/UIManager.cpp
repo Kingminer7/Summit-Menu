@@ -87,7 +87,7 @@ namespace summit::ui {
     return m_label;
   }
   
-  auto *Widget::setLabel(std::string label) {
+  Widget *Widget::setLabel(std::string label) {
     this->m_label = label;
     return this;
   }
@@ -97,6 +97,42 @@ namespace summit::ui {
     ret->init(id, label);
     return ret;
   }
+
+  // Toggle Widget
+
+  void ToggleWidget::init(std::string id, std::string label, bool toggled, std::function<void (bool toggled)> callback) {
+    Widget::init(id, label);
+    this->m_toggled = toggled;
+    this->m_callback = callback;
+  }
+
+  ToggleWidget *ToggleWidget::setLabel(std::string label) {
+    m_label = label;
+    return this;
+  }
+  bool ToggleWidget::isToggled() {
+    return m_toggled;
+  }
+  ToggleWidget *ToggleWidget::setToggled(bool value) {
+    this->m_toggled = value;
+    return this;
+  }
+
+  ToggleWidget *ToggleWidget::create(std::string id, std::string label, bool toggled, std::function<void (bool)> callback) {
+    auto ret = new ToggleWidget;
+    ret->init(id, label, toggled, callback);
+    return ret;
+  }
+
+  std::function<void (bool)> ToggleWidget::getCallback() {
+    return m_callback;
+  }
+
+  ToggleWidget *ToggleWidget::setCallback(std::function<void (bool)> callback) {
+    this->m_callback = callback;
+    return this;
+  }
+
 
   $onLoad(Initial, 0)  {
     UIManager::get()->registerTab(Tab::create("Global"));

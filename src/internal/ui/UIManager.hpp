@@ -1,3 +1,6 @@
+#pragma once
+
+#include <functional>
 #include <list>
 #include <map>
 #include <string>
@@ -51,8 +54,25 @@ namespace summit::ui {
       virtual std::string getType() {return "Label";} // it's just easier to make the base a label  
       std::string getId();
       std::string getLabel();
-      auto *setLabel(std::string label);
+      Widget *setLabel(std::string label);
 
       static Widget *create(std::string id, std::string label);
+  };
+
+  class ToggleWidget : public Widget{
+    protected:
+      bool m_toggled = false;
+      std::function<void (bool toggled)> m_callback = nullptr;
+      virtual void init(std::string id, std::string label, bool toggled, std::function<void (bool toggled)> callback);
+
+    public:
+      virtual std::string getType() {return "Toggle";}
+      ToggleWidget *setLabel(std::string label);
+      bool isToggled();
+      ToggleWidget *setToggled(bool value);
+      std::function<void (bool toggled)> getCallback();
+      ToggleWidget *setCallback(std::function<void (bool toggled)> callback);
+
+      static ToggleWidget *create(std::string id, std::string label, bool toggled, std::function<void (bool toggled)> callback);
   };
 }

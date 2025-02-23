@@ -19,7 +19,7 @@ namespace summit::ui {
       virtual StyleSystem getSystem() = 0;
 
       virtual void show() = 0;
-      virtual void hide() = 0;
+      virtual void hide();
       virtual void toggle() {
         if (m_visible) hide();
         else show();

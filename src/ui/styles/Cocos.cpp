@@ -7,10 +7,12 @@
 namespace summit::ui::styles {
 
   cocos2d::CCNode *fromWidget(Widget *widget) {
-    // if (widget->getType() == "SomeType") {
-      
-    // }
-    auto node = CUI::LabelNode::create(widget->getId(), widget->getLabel());
+    if (widget->getType() == "Toggle") {
+      auto tw = static_cast<ToggleWidget *>(widget);
+      auto node = CUI::ToggleNode::create(tw);
+      return node;
+    }
+    auto node = CUI::LabelNode::create(widget);
     return node;
   }
 
@@ -44,6 +46,7 @@ namespace summit::ui::styles {
   void CocosUIStyle::hide() {
     m_visible = false;
     MenuBall::get()->setHandlingTouch(true);
+    Style::hide();
     if (auto node = cocos2d::CCScene::get()->getChildByID("km7dev.summit_menu/cocos-ui")) {
       if (auto ui = static_cast<CocosUI *>(node)) {
         ui->onClose(ui);
@@ -53,8 +56,8 @@ namespace summit::ui::styles {
 
   void CocosUIStyle::hideFromPopup() {
     m_visible = false;
-    
     MenuBall::get()->setHandlingTouch(true);
+    Style::hide();
   }
 
   // Called for whatever system is used
@@ -207,14 +210,13 @@ namespace summit::ui::styles {
   }
 
   namespace CUI {
-    bool LabelNode::init(std::string id, std::string label) {
+    bool LabelNode::init(Widget *widget) {
       if (!CCNode::init()) return false;
-
-      setID(fmt::format("label-{}", id));
-
+      this->m_widget = widget;
+      setID(fmt::format("label-{}", widget->getId()));
       setContentSize({185, 30});
 
-      m_label = cocos2d::CCLabelBMFont::create(label.c_str(), "chatFont.fnt");
+      m_label = cocos2d::CCLabelBMFont::create(widget->getLabel().c_str(), "chatFont.fnt");
       m_label->limitLabelWidth(getContentWidth() - 10.f, 1.f, .05f);
       m_label->setID("label");
       addChildAtPosition(m_label, geode::Anchor::Center);
@@ -222,9 +224,57 @@ namespace summit::ui::styles {
       return true;
     }
     
-    LabelNode *LabelNode::create(std::string id, std::string label) {
+    LabelNode *LabelNode::create(Widget *widget) {
       auto ret = new LabelNode();
-      if (ret->init(id, label)) {
+      if (ret->init(widget)) {
+        ret->autorelease();
+        return ret;
+      }
+  
+      delete ret;
+      return nullptr;
+    }
+
+    
+    bool ToggleNode::init(Widget *widget) {
+      auto tw = static_cast<ToggleWidget *>(widget);
+      if (!tw) return false;
+      if (!CCNode::init()) return false;
+      this->m_widget = tw;
+      setID(fmt::format("toggle-{}", widget->getId()));
+      setContentSize({185, 30});
+
+      m_buttonMenu = cocos2d::CCMenu::create();
+      m_buttonMenu->setContentSize(getContentSize());
+      m_buttonMenu->setID("button-menu");
+      addChildAtPosition(m_buttonMenu, geode::Anchor::Center, {0, 0});
+
+      m_toggle = CCMenuItemToggler::createWithStandardSprites(this, menu_selector(ToggleNode::onToggle), 1.f);
+      m_toggle->setID("toggle");
+      m_toggle->toggle(tw->isToggled());
+      // Built in scale in create doesnt scale hitbox 💔
+      m_toggle->setScale(.75f);
+      m_buttonMenu->addChildAtPosition(m_toggle, geode::Anchor::Right, {-17, 0});
+
+      m_label = cocos2d::CCLabelBMFont::create(widget->getLabel().c_str(), "chatFont.fnt");
+      m_label->limitLabelWidth(getContentWidth() - 35.f, 1.f, .05f);
+      m_label->setID("label");
+      addChildAtPosition(m_label, geode::Anchor::Center, {-13.5, 0});
+
+      return true;
+    }
+
+    void ToggleNode::onToggle(cocos2d::CCObject *sender) {
+      bool toggled = !m_widget->isToggled();
+      m_widget->setToggled(toggled);
+      if (auto cb = m_widget->getCallback()) {
+        cb(toggled);
+      }
+    }
+    
+    ToggleNode *ToggleNode::create(Widget *widget) {
+      auto ret = new ToggleNode();
+      if (ret->init(widget)) {
         ret->autorelease();
         return ret;
       }

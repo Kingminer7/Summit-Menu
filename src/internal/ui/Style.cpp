@@ -1,5 +1,6 @@
 #include "ui/Style.hpp"
 #include "Geode/loader/Log.hpp"
+#include "utils/Config.hpp"
 #include "utils/UpdateManager.hpp"
 #include <fmt/format.h>
 namespace summit::ui {
@@ -46,6 +47,10 @@ namespace summit::ui {
       m_currentStyle = m_styles[id];
       m_currentStyle->init();
     }
+  }
+
+  void Style::hide() {
+    Config::save();
   }
 
   $onLoad(Initial, 5) {
