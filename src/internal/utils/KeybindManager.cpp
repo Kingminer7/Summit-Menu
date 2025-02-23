@@ -72,7 +72,6 @@ namespace summit::keybinds {
     // this is ugly and boring so macro
     #define ckrk(cocos, mine) case cocos2d::enumKeyCodes::cocos: return Keys::mine;
     Keys cocosToKey(cocos2d::enumKeyCodes key) {
-      geode::log::info("{}", (int) key);
       switch(key) {
         default: 
           return Keys::Unknown;

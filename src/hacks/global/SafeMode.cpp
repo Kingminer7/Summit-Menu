@@ -10,10 +10,10 @@ namespace summit::hacks::global {
     public:
       std::string getId() override { return "global.safemode"; }
       void init() override {
-        auto w = ui::ToggleWidget::create(getId(), "Safe Mode (Still partly a Test)", Config::get("global.safemode", false), [](bool toggled) {
+        auto t = ui::ToggleWidget::create(getId(), "Safe Mode (Still partly a Test)", Config::get("global.safemode", false), [](bool toggled) {
           Config::set("global.safemode", toggled);
         });
-        ui::UIManager::get()->getTab("Global")->addWidget(w);
+        ui::UIManager::get()->getTab("Global")->addWidget(t);
       }
   };
 

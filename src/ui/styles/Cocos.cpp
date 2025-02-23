@@ -6,7 +6,7 @@
 
 namespace summit::ui::styles {
 
-  cocos2d::CCNode *fromWidget(Widget *widget) {
+  CUI::LabelNode *fromWidget(Widget *widget) {
     if (widget->getType() == "Toggle") {
       auto tw = static_cast<ToggleWidget *>(widget);
       auto node = CUI::ToggleNode::create(tw);
@@ -112,7 +112,7 @@ namespace summit::ui::styles {
     // I refuse to change this name.
     auto holderBecauseScrollLayerIsSuperStupidAndIHateIt = cocos2d::CCNode::create();
     holderBecauseScrollLayerIsSuperStupidAndIHateIt->setID("dumb-holder");
-    m_hackScroll->m_contentLayer->addChildAtPosition(holderBecauseScrollLayerIsSuperStupidAndIHateIt, geode::Anchor::Center);
+    m_hackScroll->m_contentLayer->addChildAtPosition(holderBecauseScrollLayerIsSuperStupidAndIHateIt, geode::Anchor::Top);
 
     auto tabY = -5;
 
@@ -149,13 +149,59 @@ namespace summit::ui::styles {
       menu->ignoreAnchorPointForPosition(false);
       menu->setVisible(m_currentTab == id);
       m_hackMenus[id] = menu;
-
+      
+      auto btnY = 0.f;
+      bool left = true;
+      std::list<CUI::LabelNode *> cache = {};
       for (auto const& [wid, widget] : tab->getWidgets()) {
         auto node = fromWidget(widget);
-        menu->addChild(node);
+        if (!node) continue;
+        if (left) {
+          if (!cache.empty()) {
+            for (auto node2 : cache) {
+              btnY += node2->getContentHeight();
+              node2->setPosition({0, btnY});
+              menu->addChild(node2);
+            }
+            cache.clear();
+          }
+          btnY += node->getContentHeight();
+          node->setPosition({0, btnY});
+          menu->addChild(node);
+          if (node->getWidgetSize() == WidgetSize::Half) {
+            left = false;
+          }
+        } else {
+          if (node->getWidgetSize() == WidgetSize::Full) {
+            cache.push_back(node);
+          } else {
+            node->setPosition({fullHackSize.width / 2, btnY});
+            menu->addChild(node);
+            left = true;
+          }
+        }
+      }
+      if (!cache.empty()) {
+        for (auto node2 : cache) {
+          btnY += node2->getContentHeight();
+          node2->setPosition({0, btnY});
+          menu->addChild(node2);
+        }
+        cache.clear();
+      }
+
+      auto h = std::max(height, btnY);
+      menu->setContentSize({fullHackSize.width, h});
+      for (auto node : geode::cocos::CCArrayExt<CUI::LabelNode *>(menu->getChildren())) {
+        node->setPositionY(h - node->getPositionY());
+      }
+
+      if (m_currentTab == id) {
+        m_hackScroll->m_contentLayer->setContentHeight(h);
       }
      
-      holderBecauseScrollLayerIsSuperStupidAndIHateIt->addChildAtPosition(menu, geode::Anchor::Center);
+      holderBecauseScrollLayerIsSuperStupidAndIHateIt->addChildAtPosition(menu, geode::Anchor::Bottom, {0, -menu->getContentHeight() / 2});
+      m_hackScroll->scrollToTop();
     }
     m_tabMenu->updateLayout();
     
@@ -180,7 +226,7 @@ namespace summit::ui::styles {
     m_currentTab = node->getID();
     if (auto menu = m_hackMenus[m_currentTab]) {
       menu->setVisible(true);
-      m_hackScroll->m_contentLayer->setContentHeight(std::max(m_hackScroll->getContentHeight(), menu->getContentHeight()));
+      m_hackScroll->m_contentLayer->setContentHeight(menu->getContentSize().height);
     }
     m_hackScroll->scrollToTop();
   }
@@ -211,10 +257,16 @@ namespace summit::ui::styles {
 
   namespace CUI {
     bool LabelNode::init(Widget *widget) {
+      if (widget->m_overrides.m_size == WidgetSize::DontChange)
+        m_size = WidgetSize::Half;
+      else
+        m_size = widget->m_overrides.m_size;
+
       if (!CCNode::init()) return false;
       this->m_widget = widget;
       setID(fmt::format("label-{}", widget->getId()));
-      setContentSize({185, 30});
+      auto width = m_size == WidgetSize::Half ? 370.f / 2 : 370.f;
+      setContentSize({width, 30});
 
       m_label = cocos2d::CCLabelBMFont::create(widget->getLabel().c_str(), "chatFont.fnt");
       m_label->limitLabelWidth(getContentWidth() - 10.f, 1.f, .05f);
@@ -222,6 +274,10 @@ namespace summit::ui::styles {
       addChildAtPosition(m_label, geode::Anchor::Center);
 
       return true;
+    }
+
+    WidgetSize LabelNode::getWidgetSize() {
+      return m_size;
     }
     
     LabelNode *LabelNode::create(Widget *widget) {
@@ -237,12 +293,18 @@ namespace summit::ui::styles {
 
     
     bool ToggleNode::init(Widget *widget) {
+      if (widget->m_overrides.m_size == WidgetSize::DontChange)
+        m_size = WidgetSize::Half;
+      else
+        m_size = widget->m_overrides.m_size;
+      
       auto tw = static_cast<ToggleWidget *>(widget);
       if (!tw) return false;
       if (!CCNode::init()) return false;
       this->m_widget = tw;
       setID(fmt::format("toggle-{}", widget->getId()));
-      setContentSize({185, 30});
+      auto width = m_size == WidgetSize::Half ? 370.f / 2 : 370.f;
+      setContentSize({width, 30});
 
       m_buttonMenu = cocos2d::CCMenu::create();
       m_buttonMenu->setContentSize(getContentSize());

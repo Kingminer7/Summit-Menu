@@ -43,14 +43,23 @@ namespace summit::ui {
       static Tab *create(std::string id);
       
   };
-
+  enum class WidgetSize {
+    DontChange,
+    Half,
+    Full,
+  };
   class Widget {
+    public:
+      struct Overrides {
+        WidgetSize m_size = WidgetSize::DontChange;
+      };
     protected:
       Tab *m_tab = nullptr;
       std::string m_id = "";
       std::string m_label = "";
       virtual void init(std::string id, std::string label);
     public:
+      Overrides m_overrides = Overrides();
       virtual std::string getType() {return "Label";} // it's just easier to make the base a label  
       std::string getId();
       std::string getLabel();

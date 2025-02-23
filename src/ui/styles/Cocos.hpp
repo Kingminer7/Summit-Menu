@@ -46,17 +46,17 @@ namespace summit::ui::styles {
         cocos2d::CCMenu *m_buttonMenu = nullptr;
         cocos2d::CCLabelBMFont *m_label = nullptr;
         Widget *m_widget = nullptr;
-        bool init(Widget *widget);
+        WidgetSize m_size;
+        virtual bool init(Widget *widget);
       public:
         static LabelNode *create(Widget *widget);
+        WidgetSize getWidgetSize();
     };
-    class ToggleNode : public cocos2d::CCNode {
+    class ToggleNode : public LabelNode {
       protected:
-        cocos2d::CCMenu *m_buttonMenu = nullptr;
-        cocos2d::CCLabelBMFont *m_label = nullptr;
         CCMenuItemToggler *m_toggle = nullptr;
         ToggleWidget *m_widget = nullptr;
-        bool init(Widget *widget);
+        bool init(Widget *widget) override;
       public:
         static ToggleNode *create(Widget *widget);
 
