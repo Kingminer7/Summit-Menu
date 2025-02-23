@@ -1,5 +1,6 @@
 #include "../nodes/MenuBall.hpp"
 #include "../nodes/CFMenuItem.hpp"
+#include "Summit.hpp"
 #include "ui/Style.hpp"
 #include "Cocos.hpp"
 #include <Geode/Geode.hpp>
@@ -104,7 +105,9 @@ namespace summit::ui::styles {
 
     auto tabY = -5;
 
-    for (std::string tab : {"These", "tabs", "are", "temporarily", "hardcoded", "lel", "Config", "Geode", "Reference", "Hi my name is Firee"}) {
+    auto uim = UIManager::get();
+    for (auto id : uim->getOrder()) {
+      auto tab = uim->getTab(id);
       auto btnBg = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
       btnBg->setID("btn-bg");
       btnBg->setScale(0.25f);
@@ -113,28 +116,28 @@ namespace summit::ui::styles {
       btnBg->setOpacity(75);
       tabY += tabBtnSize.height + 3.f;
   
-      auto btnLab = cocos2d::CCLabelBMFont::create(tab.c_str(), "bigFont.fnt");
+      auto btnLab = cocos2d::CCLabelBMFont::create(id.c_str(), "bigFont.fnt");
       btnLab->limitLabelWidth(tabBtnSize.width - 5, .5f, .05f);
       btnLab->setID("btn-label");
       
       auto btn = CFMenuItem::create(
           btnBg, this, menu_selector(CocosUI::onTab)
       );
-      btn->setID(tab);
+      btn->setID(id);
       btn->addChildAtPosition(btnLab, geode::Anchor::Center);
       btn->m_animationEnabled = false;
       btn->m_colorEnabled = true;
-      btn->m_baseColor = tab == m_currentTab ? cocos2d::ccColor3B({160,160,160}) : cocos2d::ccColor3B({0,0,0});
+      btn->m_baseColor = id == m_currentTab ? cocos2d::ccColor3B({160,160,160}) : cocos2d::ccColor3B({0,0,0});
       if (auto img = static_cast<cocos2d::CCSprite *>(btn->getNormalImage())) img->setColor(btn->m_baseColor);
       btn->m_selectColor = {50,50,50};
       m_tabMenu->addChild(btn);
 
       cocos2d::CCMenu *menu = cocos2d::CCMenu::create();
-      menu->setID(tab);
+      menu->setID(id);
       menu->setContentSize({fullHackSize.width, height});
       menu->ignoreAnchorPointForPosition(false);
-      menu->setVisible(m_currentTab == tab);
-      m_hackMenus[tab] = menu;
+      menu->setVisible(m_currentTab == id);
+      m_hackMenus[id] = menu;
       
       holderBecauseScrollLayerIsSuperStupidAndIHateIt->addChildAtPosition(menu, geode::Anchor::Center);
     }

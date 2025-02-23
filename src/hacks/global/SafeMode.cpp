@@ -1,7 +1,6 @@
 #include "Geode/binding/GJGameLevel.hpp"
 #include "Geode/binding/GameStatsManager.hpp"
 #include "Geode/binding/PlayLayer.hpp"
-#include <hacks/Hack.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/PlayerObject.hpp>
 #include <Summit.hpp>
@@ -11,7 +10,8 @@ namespace summit::hacks::global {
     public:
       std::string getId() override { return "global.safemode"; }
       void init() override {
-        
+        auto w = ui::Widget::create(getId(), "Safe Mode");
+        ui::UIManager::get()->getTab("Global")->addWidget(w);
       }
   };
 

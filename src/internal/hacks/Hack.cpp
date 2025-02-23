@@ -10,9 +10,9 @@ namespace summit::hacks {
   }
 
   void HackManager::registerHack(Hack *hack) {
-    if (!hack) return geode::log::error("Cannot register nonexistent hack.");
+    if (!hack) return geode::log::error("(HackManager) No hack provided.");
     auto id = hack->getId();
-    if (m_hacks.contains(id))  return geode::log::error("Hack {} already registered.", id);
+    if (m_hacks.contains(id))  return geode::log::error("(HackManager) Hack {} already registered.", id);
     m_hacks[id] = hack;
   }
 
