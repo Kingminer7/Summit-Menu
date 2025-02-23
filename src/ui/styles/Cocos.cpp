@@ -1,7 +1,6 @@
 #include "../nodes/MenuBall.hpp"
 #include "../nodes/CFMenuItem.hpp"
-#include "Summit.hpp"
-#include "ui/Style.hpp"
+#include <Summit.hpp>
 #include "Cocos.hpp"
 #include <Geode/Geode.hpp>
 
@@ -138,7 +137,7 @@ namespace summit::ui::styles {
       menu->ignoreAnchorPointForPosition(false);
       menu->setVisible(m_currentTab == id);
       m_hackMenus[id] = menu;
-      
+     
       holderBecauseScrollLayerIsSuperStupidAndIHateIt->addChildAtPosition(menu, geode::Anchor::Center);
     }
     m_tabMenu->updateLayout();
