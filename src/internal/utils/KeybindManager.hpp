@@ -8,8 +8,7 @@
 
 namespace summit::keybinds {
   enum class Modifiers {
-    // AKA Windows
-    Command = 8,
+    Meta = 8,
     Alt = 4,
     Control = 2,
     Shift = 1,
