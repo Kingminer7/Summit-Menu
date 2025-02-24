@@ -35,6 +35,11 @@ project(SummitMenu VERSION 1.0.0)
 
 file(GLOB_RECURSE SOURCES src/*.cpp )
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+    file(GLOB_RECURSE MAC_SOURCES src/*.mm)
+    list(APPEND SOURCES ${MAC_SOURCES})
+endif()
+
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE "src/internal" "include")
 

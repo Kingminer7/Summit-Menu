@@ -170,6 +170,7 @@ namespace summit::keybinds {
       void removeKeybind(std::string id);
       Keybind *getKeybind(std::string id);
       std::map<std::string, Keybind *> getKeybinds();
+      bool checkBinds(Keys key, KeyStates state, int modifiers);
   };
 }
 #endif

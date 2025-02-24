@@ -1,7 +1,6 @@
 #include "KeybindManager.hpp"
 #include "Geode/loader/Log.hpp"
 #include <Geode/modify/CCKeyboardDispatcher.hpp>
-#include <Geode/modify/CCEGLView.hpp>
 
 #ifndef GEODE_IS_IOS
 
@@ -46,7 +45,7 @@ namespace summit::keybinds {
 
 
 
-  bool checkBinds(Keys key, KeyStates state, int modifiers) {
+  bool KeybindManager::checkBinds(Keys key, KeyStates state, int modifiers) {
     for (auto& bind : KeybindManager::get()->getKeybinds()) {
       int bindModifiers = 0;
       for (auto& mod : bind.second->m_modifiers) {
@@ -59,16 +58,7 @@ namespace summit::keybinds {
     return false;
   }
 
-  #ifdef GEODE_IS_WINDOWS
-    class $modify (KeybindEGLView, cocos2d::CCEGLView) {
-      void onGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-        auto res = checkBinds((Keys) key, (KeyStates) action, mods);
-        if (!res)
-        CCEGLView::onGLFWKeyCallback(window, key, scancode, action, mods);
-      }
-    };
-  #else
-
+  #if !defined(GEODE_IS_WINDOWS) && !defined(GEODE_IS_MACOS)
     // this is ugly and boring so macro
     #define ckrk(cocos, mine) case cocos2d::enumKeyCodes::cocos: return Keys::mine;
     Keys cocosToKey(cocos2d::enumKeyCodes key) {
