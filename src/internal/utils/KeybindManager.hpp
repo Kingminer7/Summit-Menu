@@ -171,5 +171,6 @@ namespace summit::keybinds {
       std::map<std::string, Keybind *> getKeybinds();
       bool checkBinds(Keys key, KeyStates state, int modifiers);
   };
+  std::string nameForKey(Keys key);
 }
 #endif

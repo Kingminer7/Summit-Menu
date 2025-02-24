@@ -46,6 +46,7 @@ namespace summit::keybinds {
 
 
   bool KeybindManager::checkBinds(Keys key, KeyStates state, int modifiers) {
+    geode::log::info("Checking binds for {} {} {}", nameForKey(key), (int) state, (int) modifiers);
     for (auto& bind : KeybindManager::get()->getKeybinds()) {
       int bindModifiers = 0;
       for (auto& mod : bind.second->m_modifiers) {
@@ -200,6 +201,132 @@ namespace summit::keybinds {
       }
     };
   #endif
+
+  std::string nameForKey(Keys key) {
+    switch(key) {
+      default: return "Unknown";
+      case Keys::Space: return "Space";
+      case Keys::Apostrophe: return "Apostrophe";
+      case Keys::Comma: return "Comma";
+      case Keys::Minus: return "Minus";
+      case Keys::Period: return "Period";
+      case Keys::Slash: return "Slash";
+      case Keys::Key0: return "Num0";
+      case Keys::Key1: return "Num1";
+      case Keys::Key2: return "Num2";
+      case Keys::Key3: return "Num3";
+      case Keys::Key4: return "Num4";
+      case Keys::Key5: return "Num5";
+      case Keys::Key6: return "Num6";
+      case Keys::Key7: return "Num7";
+      case Keys::Key8: return "Num8";
+      case Keys::Key9: return "Num9";
+      case Keys::Semicolon: return "Semicolon";
+      case Keys::Equal: return "Equal";
+      case Keys::A: return "A";
+      case Keys::B: return "B";
+      case Keys::C: return "C";
+      case Keys::D: return "D";
+      case Keys::E: return "E";
+      case Keys::F: return "F";
+      case Keys::G: return "G";
+      case Keys::H: return "H";
+      case Keys::I: return "I";
+      case Keys::J: return "J";
+      case Keys::K: return "K";
+      case Keys::L: return "L";
+      case Keys::M: return "M";
+      case Keys::N: return "N";
+      case Keys::O: return "O";
+      case Keys::P: return "P";
+      case Keys::Q: return "Q";
+      case Keys::R: return "R";
+      case Keys::S: return "S";
+      case Keys::T: return "T";
+      case Keys::U: return "U";
+      case Keys::V: return "V";
+      case Keys::W: return "W";
+      case Keys::X: return "X";
+      case Keys::Y: return "Y";
+      case Keys::Z: return "Z";
+      case Keys::LeftBracket: return "LeftBracket";
+      case Keys::Backslash: return "Backslash";
+      case Keys::RightBracket: return "RightBracket";
+      case Keys::GraveAccent: return "GraveAccent";
+      case Keys::World1: return "World1";
+      case Keys::World2: return "World2";
+      case Keys::Escape: return "Escape";
+      case Keys::Enter: return "Enter";
+      case Keys::Tab: return "Tab";
+      case Keys::Backspace: return "Backspace";
+      case Keys::Insert: return "Insert";
+      case Keys::Delete: return "Delete";
+      case Keys::Right: return "Right";
+      case Keys::Left: return "Left";
+      case Keys::Down: return "Down";
+      case Keys::Up: return "Up";
+      case Keys::PageUp: return "PageUp";
+      case Keys::PageDown: return "PageDown";
+      case Keys::Home: return "Home";
+      case Keys::End: return "End";
+      case Keys::CapsLock: return "CapsLock";
+      case Keys::ScrollLock: return "ScrollLock";
+      case Keys::NumLock: return "NumLock";
+      case Keys::PrintScreen: return "PrintScreen";
+      case Keys::Pause: return "Pause";
+      case Keys::F1: return "F1";
+      case Keys::F2: return "F2";
+      case Keys::F3: return "F3";
+      case Keys::F4: return "F4";
+      case Keys::F5: return "F5";
+      case Keys::F6: return "F6";
+      case Keys::F7: return "F7";
+      case Keys::F8: return "F8";
+      case Keys::F9: return "F9";
+      case Keys::F10: return "F10";
+      case Keys::F11: return "F11";
+      case Keys::F12: return "F12";
+      case Keys::F13: return "F13";
+      case Keys::F14: return "F14";
+      case Keys::F15: return "F15";
+      case Keys::F16: return "F16";
+      case Keys::F17: return "F17";
+      case Keys::F18: return "F18";
+      case Keys::F19: return "F19";
+      case Keys::F20: return "F20";
+      case Keys::F21: return "F21";
+      case Keys::F22: return "F22";
+      case Keys::F23: return "F23";
+      case Keys::F24: return "F24";
+      case Keys::F25: return "F25";
+      case Keys::Num0: return "Num0";
+      case Keys::Num1: return "Num1";
+      case Keys::Num2: return "Num2";
+      case Keys::Num3: return "Num3";
+      case Keys::Num4: return "Num4";
+      case Keys::Num5: return "Num5";
+      case Keys::Num6: return "Num6";
+      case Keys::Num7: return "Num7";
+      case Keys::Num8: return "Num8";
+      case Keys::Num9: return "Num9";
+      case Keys::Decimal: return "Decimal";
+      case Keys::Divide: return "Divide";
+      case Keys::Multiply: return "Multiply";
+      case Keys::Subtract: return "Subtract";
+      case Keys::Add: return "Add";
+      case Keys::NumEnter: return "NumEnter";
+      case Keys::NumEqual: return "NumEqual";
+      case Keys::LeftShift: return "LeftShift";
+      case Keys::LeftControl: return "LeftControl";
+      case Keys::LeftAlt: return "LeftAlt";
+      case Keys::LeftSuper: return "LeftSuper";
+      case Keys::RightShift: return "RightShift";
+      case Keys::RightControl: return "RightControl";
+      case Keys::RightAlt: return "RightAlt";
+      case Keys::RightSuper: return "RightSuper";
+      case Keys::Menu: return "Menu";
+    }
+  }
 }
 
 #endif
