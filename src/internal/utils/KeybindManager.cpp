@@ -195,7 +195,7 @@ namespace summit::keybinds {
         + (m_bAltPressed ? 4 : 0)
         + (m_bControlPressed ? 2 : 0)
         + (m_bCommandPressed ? 1 : 0);
-        if(checkBinds(cocosToKey(key), repeat ? KeyStates::Hold : down ? KeyStates::Press : KeyStates::Release, mods)) return true;
+        if(KeybindManager::checkBinds(cocosToKey(key), repeat ? KeyStates::Hold : down ? KeyStates::Press : KeyStates::Release, mods)) return true;
         return CCKeyboardDispatcher::dispatchKeyboardMSG(key, down, repeat);
       }
     };
