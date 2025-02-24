@@ -1,3 +1,5 @@
+#ifdef GEODE_IS_MACOS
+
 /*
 Thanks very much SpaghettDev
 https://github.com/SpaghettDev/BetterInputs/blob/master/src/macos.mm
@@ -187,3 +189,5 @@ $on_mod(Loaded)
 	// HOOK_OBJC_METHOD(EAGLView, key_event_t, mouseDownExec, mouseDownExec:);
 	// HOOK_OBJC_METHOD(EAGLView, key_event_t, mouseUpExec, mouseUpExec:);
 }
+
+#endif
