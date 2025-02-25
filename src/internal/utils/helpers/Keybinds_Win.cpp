@@ -1,7 +1,7 @@
-#include "../KeybindManager.hpp"
-#include <Geode/Geode.hpp>
+#include <Geode/platform/cplatform.h>
 
 #ifdef GEODE_IS_WINDOWS
+#include "../KeybindManager.hpp"
 #include <Geode/modify/CCEGLView.hpp>
 
 class $modify (KeybindEGLView, cocos2d::CCEGLView) {
