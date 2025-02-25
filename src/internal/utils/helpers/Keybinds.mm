@@ -23,11 +23,15 @@ https://github.com/SpaghettDev/BetterInputs/blob/master/src/macos.mm
 
 namespace summit::keybinds {
 	summit::keybinds::Keys fromEvent(NSEvent* event) {
+		geode::log::debug("{}", (char) ([[event characters] length] > 0
+			? [[event characters] characterAtIndex:0]
+			: [[event charactersIgnoringModifiers] length] > 0
+				? [[event charactersIgnoringModifiers] characterAtIndex:0]
+				: 0));
 		switch ([event keyCode])
 		{
-			// Follow order of summit::keybinds::Keys
 			case kVK_Space: return Keys::Space;
-			case kAEUTApostrophe: return Keys::Apostrophe;
+			case kVK_ANSI_Quote: return Keys::Apostrophe;
 			case kVK_ANSI_Comma: return Keys::Comma;
 			case kVK_ANSI_Minus: return Keys::Minus;
 			case kVK_ANSI_Period: return Keys::Period;
@@ -222,7 +226,7 @@ void keyDownExec(EAGLView* self, SEL sel, NSEvent* event)
         + (summit::keybinds::keyDown(summit::keybinds::Keys::LeftAlt, event) ? 4 : 0)
         + (summit::keybinds::keyDown(summit::keybinds::Keys::LeftControl, event) ? 8 : 0);
 
-		if (summit::keybinds::KeybindManager::get()->checkBinds(summit::keybinds::fromEvent(event), summit::keybinds::KeyStates::Press, modifiers)) return;
+		if (summit::keybinds::KeybindManager::get()->checkBinds(summit::keybinds::fromEvent(event), [event isARepeat] ? summit::keybinds::KeyStates::Hold : summit::keybinds::KeyStates::Press, modifiers)) return;
 	// key is probably a regular character, allow CCIMEDispatcher to pick up the event
 	keyDownExecOIMP(self, sel, event);
 }
@@ -237,13 +241,11 @@ void keyUpExec(EAGLView* self, SEL sel, NSEvent* event)
 
     
 	if (summit::keybinds::KeybindManager::get()->checkBinds(summit::keybinds::fromEvent(event), summit::keybinds::KeyStates::Release, modifiers)) return;
-	// add the other code from above herer ig?
 
 	keyUpExecOIMP(self, sel, event);
 }
 
 // I don't plan on adding mouse stuff to summit but will maybe look into later.
-
 
 // https://github.com/qimiko/click-on-steps/blob/d8a87e93b5407e5f2113a9715363a5255724c901/src/macos.mm#L101
 $on_mod(Loaded)
