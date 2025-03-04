@@ -2,5 +2,7 @@
 - [ ] Fix Cocos UI Tab Overflow
 - [ ] Descriptions and Sub-widgets
 - [ ] Cocos UI Node Content Size
+- [ ] API?
+- [ ] Proper android keybind support
 - [ ] Credits
   - [ ] SpaghettDev - https://github.com/SpaghettDev/BetterInputs/blob/master/src/macos.mm
